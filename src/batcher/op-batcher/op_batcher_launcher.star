@@ -102,7 +102,6 @@ def get_batcher_config(
         "--rpc.enable-admin",
         "--max-channel-duration=1",
         "--l1-eth-rpc=" + l1_config_env_vars["L1_RPC_URL"],
-        "--private-key=" + gs_batcher_private_key,
         # da commitments currently have to be sent as calldata to the batcher inbox
         "--data-availability-type="
         + ("calldata" if da_server_context.enabled else "blobs"),
@@ -113,7 +112,16 @@ def get_batcher_config(
         "--altda.da-service",
     ]
 
-    # apply customizations
+    plan.print("Batcher params: " + str(batcher_params))
+    plan.print(batcher_params.signer_endpoint)
+    plan.print(batcher_params.signer_address)
+
+    if batcher_params.private_key:
+        cmd.append("--private-key=" + gs_batcher_private_key)
+    else:
+        cmd.append("--signer.endpoint=" + str(batcher_params.signer_endpoint))
+        cmd.append("--signer.address=" + str(batcher_params.signer_address))
+        cmd.append("--signer.tls.enabled=false")
 
     if observability_helper.enabled:
         observability.configure_op_service_metrics(cmd, ports)
@@ -125,4 +133,4 @@ def get_batcher_config(
         ports=ports,
         cmd=cmd,
         private_ip_address_placeholder=ethereum_package_constants.PRIVATE_IP_ADDRESS_PLACEHOLDER,
-    )
+    ) 
