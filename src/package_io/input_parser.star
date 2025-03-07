@@ -202,6 +202,9 @@ def input_parser(plan, input_args):
                 ),
                 batcher_params=struct(
                     image=result["batcher_params"]["image"],
+                    private_key = result["batcher_params"]["private_key"],
+                    signer_endpoint = result["batcher_params"]["signer_endpoint"],
+                    signer_address = result["batcher_params"]["signer_address"],
                     extra_params=result["batcher_params"]["extra_params"],
                 ),
                 challenger_params=struct(
@@ -522,6 +525,9 @@ def default_batcher_params():
     return {
         "image": DEFAULT_BATCHER_IMAGES["op-batcher"],
         "extra_params": [],
+        "private_key": "",
+        "signer_endpoint": "",
+        "signer_address": "",
     }
 
 
