@@ -39,8 +39,14 @@ optimism_package:
         signer_endpoint: 'http://host.docker.internal:4000/key/65021b59-0433-47e7-975d-0dcbfe898f9e'
         extra_params: []
       challenger_params:
+        # example private key
+        private_key: "b9f4adcd558ab4c920150f7960c891b6205525ff19bef211d19464f81d726f5b"
         enabled: true
         extra_params: []
+      sequencer_params:
+        private_key: "b9f4adcd558ab4c920150f7960c891b6205525ff19bef211d19464f81d726f5b"
+      proposer_params:
+        private_key: "b9f4adcd558ab4c920150f7960c891b6205525ff19bef211d19464f81d726f5b"
       mev_params:
         builder_host: ""
         builder_port: ""

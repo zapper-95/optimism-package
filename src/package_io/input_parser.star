@@ -33,6 +33,11 @@ DEFAULT_PROPOSER_IMAGES = {
     "op-proposer": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-proposer:develop",
 }
 
+
+DEFAULT_SEQUENCER_IMAGES = {
+    "op-sequencer": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-proposer:develop",
+}
+
 DEFAULT_SIDECAR_IMAGES = {
     "rollup-boost": "flashbots/rollup-boost:latest",
 }
@@ -69,9 +74,11 @@ def external_l1_network_params_input_parser(plan, input_args):
 
 
 def input_parser(plan, input_args):
+    plan.print("HEÉeee")
     sanity_check.sanity_check(plan, input_args)
+    plan.print("have sanity!")
     results = parse_network_params(plan, input_args)
-
+    plan.print(results)
     results["global_log_level"] = "info"
     results["global_node_selectors"] = {}
     results["global_tolerations"] = []
@@ -210,6 +217,9 @@ def input_parser(plan, input_args):
                 challenger_params=struct(
                     enabled=result["challenger_params"]["enabled"],
                     image=result["challenger_params"]["image"],
+                    private_key=result["challenger_params"]["private_key"],
+                    signer_endpoint=result["challenger_params"]["signer_endpoint"],
+                    signer_address=result["challenger_params"]["signer_address"],
                     extra_params=result["challenger_params"]["extra_params"],
                     cannon_prestate_path=result["challenger_params"][
                         "cannon_prestate_path"
@@ -223,9 +233,19 @@ def input_parser(plan, input_args):
                 ),
                 proposer_params=struct(
                     image=result["proposer_params"]["image"],
+                    private_key=result["proposer_params"]["private_key"],
+                    signer_endpoint=result["proposer_params"]["signer_endpoint"],
+                    signer_address=result["proposer_params"]["signer_address"],
                     extra_params=result["proposer_params"]["extra_params"],
                     game_type=result["proposer_params"]["game_type"],
                     proposal_interval=result["proposer_params"]["proposal_interval"],
+                ),
+                sequencer_params=struct(
+                    image=result["sequencer_params"]["image"],
+                    private_key = result["sequencer_params"]["private_key"],
+                    signer_endpoint=result["sequencer_params"]["signer_endpoint"],
+                    signer_address=result["sequencer_params"]["signer_address"],
+                    extra_params=result["sequencer_params"]["extra_params"],
                 ),
                 mev_params=struct(
                     rollup_boost_image=result["mev_params"]["rollup_boost_image"],
@@ -305,12 +325,22 @@ def parse_network_params(plan, input_args):
 
         batcher_params = default_batcher_params()
         batcher_params.update(chain.get("batcher_params", {}))
+        check_signer_params(batcher_params, "batcher")
 
         proposer_params = default_proposer_params()
         proposer_params.update(chain.get("proposer_params", {}))
+        check_signer_params(proposer_params, "proposer")
 
         challenger_params = default_challenger_params()
         challenger_params.update(chain.get("challenger_params", {}))
+        check_signer_params(challenger_params, "challenger")
+
+
+
+        sequencer_params = default_sequencer_params()
+        sequencer_params.update(chain.get("sequencer_params", {}))
+        check_signer_params(sequencer_params, "sequencer")
+
 
         mev_params = default_mev_params()
         mev_params.update(chain.get("mev_params", {}))
@@ -391,6 +421,7 @@ def parse_network_params(plan, input_args):
             "batcher_params": batcher_params,
             "challenger_params": challenger_params,
             "proposer_params": proposer_params,
+            "sequencer_params": sequencer_params,
             "mev_params": mev_params,
             "da_server_params": da_server_params,
             "additional_services": chain.get(
@@ -411,6 +442,19 @@ def parse_network_params(plan, input_args):
     results["global_log_level"] = input_args.get("global_log_level", "info")
 
     return results
+
+
+def check_signer_params(role_params, role):
+    if role_params.get("private_key", ""):
+        if role_params.get("signer_endpoint", ""):
+            fail(role + " cannot have a private key and a signer endpoint")
+        if role_params.get("signer_address", ""):
+            fail(role + " cannot have a private key and a signer address")
+    elif role_params.get("signer_endpoint", "") and not role_params.get("signer_address", ""):
+        fail(role + " must have a signer address if it has a signer endpoint")
+    elif role_params.get("signer_address", "") and not role_params.get("signer_endpoint", ""):
+        fail(role + " must have a signer endpoint if it has a signer address")
+
 
 
 def default_optimism_params():
@@ -499,6 +543,7 @@ def default_chains():
             "batcher_params": default_batcher_params(),
             "proposer_params": default_proposer_params(),
             "challenger_params": default_challenger_params(),
+            "sequencer_params": default_sequencer_params(),
             "mev_params": default_mev_params(),
             "da_server_params": default_da_server_params(),
             "additional_services": DEFAULT_ADDITIONAL_SERVICES,
@@ -535,6 +580,9 @@ def default_challenger_params():
     return {
         "enabled": True,
         "image": DEFAULT_CHALLENGER_IMAGES["op-challenger"],
+        "private_key": "",
+        "signer_endpoint": "",
+        "signer_address": "",
         "extra_params": [],
         "cannon_prestate_path": "",
         "cannon_prestates_url": "https://storage.googleapis.com/oplabs-network-data/proofs/op-program/cannon",
@@ -546,8 +594,20 @@ def default_proposer_params():
     return {
         "image": DEFAULT_PROPOSER_IMAGES["op-proposer"],
         "extra_params": [],
+        "private_key": "",
+        "signer_endpoint": "",
+        "signer_address": "",
         "game_type": 1,
         "proposal_interval": "10m",
+    }
+
+def default_sequencer_params():
+    return {
+        "image": DEFAULT_SEQUENCER_IMAGES["op-sequencer"],
+        "extra_params": [],
+        "private_key": "",
+        "signer_endpoint": "",
+        "signer_address": "",
     }
 
 

@@ -5,6 +5,7 @@ FACTORY_ADDRESS = "0x4e59b44847b379578588920cA78FbF26c0B4956C"
 FACTORY_DEPLOYER_CODE = "0xf8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf31ba02222222222222222222222222222222222222222222222222222222222222222a02222222222222222222222222222222222222222222222222222222222222222"
 
 FUND_SCRIPT_FILEPATH = "../../static_files/scripts"
+
 utils = import_module("../util.star")
 
 ethereum_package_genesis_constants = import_module(
@@ -53,20 +54,54 @@ def deploy_contracts(
     )
 
     signer_info = {}
+    chain = optimism_args.chains[0]
 
-    if optimism_args.chains[0].batcher_params.private_key:
-        signer_info = {
-            "batcher": {
-                "private_key": optimism_args.chains[0].batcher_params.private_key
-            }
+    # proposer 
+    if chain.proposer_params.private_key:
+        signer_info["proposer"] = {
+            "private_key": chain.proposer_params.private_key
         }
     else:
-        signer_info = {
-            "batcher": {
-                "signer_address": optimism_args.chains[0].batcher_params.signer_address,
-                "signer_endpoint": optimism_args.chains[0].batcher_params.signer_endpoint
-            }
+        signer_info["proposer"] = {
+            "signer_address": chain.proposer_params.signer_address,
+            "signer_endpoint": chain.proposer_params.signer_endpoint
         }
+
+
+    # batcher
+    if chain.batcher_params.private_key:
+        signer_info["batcher"] = {
+            "private_key": optimism_args.chains[0].batcher_params.private_key
+        }
+    else:
+        signer_info["batcher"] = {
+            "signer_address": optimism_args.chains[0].batcher_params.signer_address,
+            "signer_endpoint": optimism_args.chains[0].batcher_params.signer_endpoint
+        }
+    
+
+    # sequencer
+    if chain.sequencer_params.private_key:
+        signer_info["sequencer"] = {
+            "private_key": chain.sequencer_params.private_key
+        }
+    else:
+        signer_info["sequencer"] = {
+            "signer_address": chain.sequencer_params.signer_address,
+            "signer_endpoint": chain.sequencer_params.signer_endpoint
+        }
+
+    # challenger
+    if chain.challenger_params.private_key:
+        signer_info["challenger"] = {
+            "private_key": chain.challenger_params.private_key
+        }
+    else:
+        signer_info["challenger"] = {
+            "signer_address": chain.challenger_params.signer_address,
+            "signer_endpoint": chain.challenger_params.signer_endpoint
+        }
+
     # serialise to JSON
     signer_info_json = json.encode(signer_info)
 
@@ -77,7 +112,6 @@ def deploy_contracts(
         env_vars={
             "SIGNER_INFORMATION": signer_info_json,
             "DEPLOYER_PRIVATE_KEY": priv_key,
-            "BATCHER_PRIVATE_KEY": optimism_args.chains[0].batcher_params.private_key,
             "FUND_PRIVATE_KEY": ethereum_package_genesis_constants.PRE_FUNDED_ACCOUNTS[
                 19
             ].private_key,

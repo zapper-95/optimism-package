@@ -33,47 +33,34 @@ for chain_id in "${chain_ids[@]}"; do
     role="${funded_roles[$index]}"
     role_idx=$((index+1))
 
-    if [ "$role" = "batcher" ]; then
-      echo "Setting up batcher role for chain $chain_id"
+    echo "Setting up $role role for chain $chain_id"
 
-      address=""
-      private_key=""
-
-      # Extract values from SIGNER_INFORMATION JSON
-      batcher_private_key=$(echo "$SIGNER_INFORMATION" | jq -r '.batcher.private_key // empty' | xargs)
-      batcher_signer_address=$(echo "$SIGNER_INFORMATION" | jq -r '.batcher.signer_address // empty' | xargs)
-      
-      if [ -n "$batcher_private_key" ]; then
-        # Use the private key from SIGNER_INFORMATION and derive the address
-        private_key="$batcher_private_key"
-        address=$(cast wallet address "$private_key")
-      else
-        #use the environment variable and the signer address from SIGNER_INFORMATION
-        private_key=$(cast wallet private-key "$mnemonic" "m/44'/60'/2'/$chain_id/$role_idx")
-        address="$batcher_signer_address"
-      fi
-
-      write_keyfile "${address}" "${private_key}" "${role}-$chain_id"
-      send "${address}"
-
-      chain_wallets=$(echo "$chain_wallets" | jq \
-        --arg role "$role" \
-        --arg private_key "$private_key" \
-        --arg address "$address" \
-        '.[$role + "PrivateKey"] = $private_key | .[$role + "Address"] = $address')
+    # Dynamically extract role-specific private key and signer address
+    
+    address=""
+    private_key=""
+    
+    role_private_key=$(echo "$SIGNER_INFORMATION" | jq -r --arg role "$role" '.[$role].private_key // empty' | xargs)
+    role_signer_address=$(echo "$SIGNER_INFORMATION" | jq -r --arg role "$role" '.[$role].signer_address // empty' | xargs)
+    
+    if [ -n "$role_private_key" ]; then
+      # Use the private key from SIGNER_INFORMATION and derive the address
+      private_key="$role_private_key"
+      address=$(cast wallet address "$private_key")
     else
-      # Handle other funded roles
+      # Use the signer address from SIGNER_INFORMATION and spoof the private key
       private_key=$(cast wallet private-key "$mnemonic" "m/44'/60'/2'/$chain_id/$role_idx")
-      address=$(cast wallet address "${private_key}")
-      write_keyfile "${address}" "${private_key}" "${role}-$chain_id"
-      send "${address}"
+      address="$role_signer_address"
+    fi
 
-      chain_wallets=$(echo "$chain_wallets" | jq \
+    write_keyfile "${address}" "${private_key}" "${role}-$chain_id"
+    send "${address}"
+
+    chain_wallets=$(echo "$chain_wallets" | jq \
       --arg role "$role" \
       --arg private_key "$private_key" \
       --arg address "$address" \
       '.[$role + "PrivateKey"] = $private_key | .[$role + "Address"] = $address')
-    fi
   done
 
   for index in "${!roles[@]}"; do
