@@ -5,7 +5,6 @@ FACTORY_ADDRESS = "0x4e59b44847b379578588920cA78FbF26c0B4956C"
 FACTORY_DEPLOYER_CODE = "0xf8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf31ba02222222222222222222222222222222222222222222222222222222222222222a02222222222222222222222222222222222222222222222222222222222222222"
 
 FUND_SCRIPT_FILEPATH = "../../static_files/scripts"
-
 utils = import_module("../util.star")
 
 ethereum_package_genesis_constants = import_module(
@@ -53,12 +52,32 @@ def deploy_contracts(
         name="op-deployer-fund-script",
     )
 
+    signer_info = {}
+
+    if optimism_args.chains[0].batcher_params.private_key:
+        signer_info = {
+            "batcher": {
+                "private_key": optimism_args.chains[0].batcher_params.private_key
+            }
+        }
+    else:
+        signer_info = {
+            "batcher": {
+                "signer_address": optimism_args.chains[0].batcher_params.signer_address,
+                "signer_endpoint": optimism_args.chains[0].batcher_params.signer_endpoint
+            }
+        }
+    # serialise to JSON
+    signer_info_json = json.encode(signer_info)
+
     plan.run_sh(
         name="op-deployer-fund",
         description="Collect keys, and fund addresses",
         image=utils.DEPLOYMENT_UTILS_IMAGE,
         env_vars={
+            "SIGNER_INFORMATION": signer_info_json,
             "DEPLOYER_PRIVATE_KEY": priv_key,
+            "BATCHER_PRIVATE_KEY": optimism_args.chains[0].batcher_params.private_key,
             "FUND_PRIVATE_KEY": ethereum_package_genesis_constants.PRE_FUNDED_ACCOUNTS[
                 19
             ].private_key,
@@ -183,6 +202,7 @@ def deploy_contracts(
         intent["chains"].append(intent_chain)
 
     intent_json = json.encode(intent)
+    plan.print(intent_json)
     intent_json_artifact = utils.write_to_file(plan, intent_json, "/tmp", "intent.json")
 
     op_deployer_configure = plan.run_sh(
