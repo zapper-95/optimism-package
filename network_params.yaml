@@ -28,13 +28,15 @@ optimism_package:
         count: 1
       network_params:
         network: "kurtosis"
-        network_id: "2151908"
+        network_id: "4151908"
         seconds_per_slot: 2
         name: "op-kurtosis"
         fjord_time_offset: 0
         granite_time_offset: 0
         fund_dev_accounts: true
       batcher_params:
+        signer_address: '0xD0e9d614E8d5C5C3e7F09Dcb31CB3A7552deC836'
+        signer_endpoint: 'http://host.docker.internal:4000/key/65021b59-0433-47e7-975d-0dcbfe898f9e'
         extra_params: []
       challenger_params:
         enabled: true
@@ -55,6 +57,7 @@ ethereum_package:
   participants:
   - el_type: geth
     cl_type: teku
+    cl_image: "consensys/teku:latest-amd64" # add this https://github.com/rancher-sandbox/rancher-desktop/issues/8057
   network_params:
     preset: minimal
     genesis_delay: 5
