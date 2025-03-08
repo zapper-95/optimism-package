@@ -445,15 +445,18 @@ def parse_network_params(plan, input_args):
 
 
 def check_signer_params(role_params, role):
-    if role_params.get("private_key", ""):
-        if role_params.get("signer_endpoint", ""):
+    if role_params.get("private_key"):
+        if role_params.get("signer_endpoint"):
             fail(role + " cannot have a private key and a signer endpoint")
-        if role_params.get("signer_address", ""):
+        if role_params.get("signer_address"):
             fail(role + " cannot have a private key and a signer address")
-    elif role_params.get("signer_endpoint", "") and not role_params.get("signer_address", ""):
-        fail(role + " must have a signer address if it has a signer endpoint")
-    elif role_params.get("signer_address", "") and not role_params.get("signer_endpoint", ""):
-        fail(role + " must have a signer endpoint if it has a signer address")
+    elif not role_params.get("signer_endpoint") and not role_params.get("signer_address"):
+        fail(role + " must have a private key or a signer endpoint and address")
+    else:
+        if role_params.get("signer_endpoint") and not role_params.get("signer_address"):
+            fail(role + " must have a signer address if it has a signer endpoint")
+        elif not role_params.get("signer_endpoint") and role_params.get("signer_address"):
+            fail(role + " must have a signer endpoint if it has a signer address")
 
 
 
