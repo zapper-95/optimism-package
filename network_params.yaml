@@ -1,4 +1,5 @@
 optimism_package:
+  deployment_type: "testnet"
   chains:
     - participants:
       - el_type: op-geth
@@ -26,27 +27,40 @@ optimism_package:
         node_selectors: {}
         tolerations: []
         count: 1
+      
       network_params:
         network: "kurtosis"
-        network_id: "4151908"
+        network_id: "2151908"
         seconds_per_slot: 2
         name: "op-kurtosis"
         fjord_time_offset: 0
         granite_time_offset: 0
-        fund_dev_accounts: true
+        fund_dev_accounts: false
+        sequencer_fee_recipient: "0x255fcBEC3d6984215a97389d83f03B608A8FA452"
+        sequencer_fee_receiver: "0x255fcBEC3d6984215a97389d83f03B608A8FA452"
       batcher_params:
-        signer_address: '0xD0e9d614E8d5C5C3e7F09Dcb31CB3A7552deC836'
-        signer_endpoint: 'http://host.docker.internal:4000/key/65021b59-0433-47e7-975d-0dcbfe898f9e'
+        address: "0x43AC3373B5878150b8600288d5098C77a3fd758F"
+        private_key: "b9f4adcd558ab4c920150f7960c891b6205525ff19bef211d19464f81d726f5b"
+        #signer_address: '0xD0e9d614E8d5C5C3e7F09Dcb31CB3A7552deC836'
+        #signer_endpoint: 'http://host.docker.internal:4000/key/65021b59-0433-47e7-975d-0dcbfe898f9e'
         extra_params: []
       challenger_params:
-        # example private key
+        address: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
         private_key: "b9f4adcd558ab4c920150f7960c891b6205525ff19bef211d19464f81d726f5b"
         enabled: true
         extra_params: []
       sequencer_params:
+        address: "0x75dA2Ff67BE16c30195067b3CD40702E1F6D4EAE"
         private_key: "b9f4adcd558ab4c920150f7960c891b6205525ff19bef211d19464f81d726f5b"
       proposer_params:
+        address: "0xD0e9d614E8d5C5C3e7F09Dcb31CB3A7552deC836"
         private_key: "b9f4adcd558ab4c920150f7960c891b6205525ff19bef211d19464f81d726f5b"
+      system_config_owner_params:
+        address: "0xD7C403a8846c961Db06606BE89e04CD532d28f0B"      
+      l1_proxy_admin_params:
+        address: "0xCFDA3C8C66dd838BdC4A376b5259dce9064e9857"
+      l2_proxy_admin_params: 
+        address: "0xD3F2c5AFb2D76f5579F326b0cD7DA5F5a4126c35"
       mev_params:
         builder_host: ""
         builder_port: ""
@@ -59,21 +73,37 @@ optimism_package:
   global_node_selectors: {}
   global_tolerations: []
   persistent: false
-ethereum_package:
-  participants:
-  - el_type: geth
-    cl_type: teku
-    cl_image: "consensys/teku:latest-amd64" # add this https://github.com/rancher-sandbox/rancher-desktop/issues/8057
-  network_params:
-    preset: minimal
-    genesis_delay: 5
-    additional_preloaded_contracts: '
-      {
-        "0x4e59b44847b379578588920cA78FbF26c0B4956C": {
-          "balance": "0ETH",
-          "code": "0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3",
-          "storage": {},
-          "nonce": "1"
-        }
-      }
-    '
+external_l1_network_params:
+  network_id: "3151908"
+  rpc_kind: standard
+  el_rpc_url: http://el-1-geth-teku:8545 
+  el_ws_url: ws://el-1-geth-teku:8546 
+  cl_rpc_url: http://cl-1-teku-geth:4000 
+  priv_key: "0xbcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31"
+
+# external_l1_network_params:
+#   network_id: "11155111"
+#   rpc_kind: quicknode
+#   el_rpc_url: https://omniscient-sparkling-model.ethereum-sepolia.quiknode.pro/0650b5f675a2d17b00c8aa2a29dadc3e46f7fdbb/
+#   el_ws_url: wss://omniscient-sparkling-model.ethereum-sepolia.quiknode.pro/0650b5f675a2d17b00c8aa2a29dadc3e46f7fdbb/
+#   cl_rpc_url: https://omniscient-sparkling-model.ethereum-sepolia.quiknode.pro/0650b5f675a2d17b00c8aa2a29dadc3e46f7fdbb/
+#   priv_key: "0xbcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31"
+
+# ethereum_package:
+#   participants:
+#   - el_type: geth
+#     cl_type: teku
+#     cl_image: "consensys/teku:latest-amd64" # add this https://github.com/rancher-sandbox/rancher-desktop/issues/8057
+#   network_params:
+#     preset: minimal
+#     genesis_delay: 5
+#     additional_preloaded_contracts: '
+#       {
+#         "0x4e59b44847b379578588920cA78FbF26c0B4956C": {
+#           "balance": "0ETH",
+#           "code": "0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3",
+#           "storage": {},
+#           "nonce": "1"
+#         }
+#       }
+#     '
