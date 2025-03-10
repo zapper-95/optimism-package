@@ -208,7 +208,6 @@ def input_parser(plan, input_args):
                     sequencer_fee_receiver=result["network_params"]["sequencer_fee_receiver"],
                 ),
                 batcher_params=struct(
-                    address=result["batcher_params"]["address"],
                     image=result["batcher_params"]["image"],
                     private_key = result["batcher_params"]["private_key"],
                     signer_endpoint = result["batcher_params"]["signer_endpoint"],
@@ -216,7 +215,6 @@ def input_parser(plan, input_args):
                     extra_params=result["batcher_params"]["extra_params"],
                 ),
                 challenger_params=struct(
-                    address=result["challenger_params"]["address"],
                     enabled=result["challenger_params"]["enabled"],
                     image=result["challenger_params"]["image"],
                     private_key=result["challenger_params"]["private_key"],
@@ -234,7 +232,6 @@ def input_parser(plan, input_args):
                     ],
                 ),
                 proposer_params=struct(
-                    address=result["proposer_params"]["address"],
                     image=result["proposer_params"]["image"],
                     private_key=result["proposer_params"]["private_key"],
                     signer_endpoint=result["proposer_params"]["signer_endpoint"],
@@ -244,7 +241,6 @@ def input_parser(plan, input_args):
                     proposal_interval=result["proposer_params"]["proposal_interval"],
                 ),
                 sequencer_params=struct(
-                    address=result["sequencer_params"]["address"],
                     image=result["sequencer_params"]["image"],
                     private_key = result["sequencer_params"]["private_key"],
                     signer_endpoint=result["sequencer_params"]["signer_endpoint"],
