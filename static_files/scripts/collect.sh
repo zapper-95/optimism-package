@@ -4,8 +4,6 @@ set -euo pipefail
 
 export ETH_RPC_URL="$L1_RPC_URL"
 
-addr=$(cast wallet address "$FUND_PRIVATE_KEY")
-
 deployer_addr=$(cast wallet address "$DEPLOYER_PRIVATE_KEY")
 
 roles=("l2ProxyAdmin" "l1ProxyAdmin" "baseFeeVaultRecipient" "l1FeeVaultRecipient" "sequencerFeeVaultRecipient" "systemConfigOwner")
@@ -67,16 +65,6 @@ for chain_id in "${chain_ids[@]}"; do
       '.[$role + "PrivateKey"] = $private_key | .[$role + "Address"] = $address')
   done
 
-  chain_wallets=$(echo "$chain_wallets" | jq \
-    --arg addr "0xafF0CA253b97e54440965855cec0A8a2E2399896" \
-    --arg private_key "0x04b9f63ecf84210c5366c66d68fa1f5da1fa4f634fad6dfc86178e4d79ff9e59" \
-    '.["l1FaucetPrivateKey"] = $private_key | .["l1FaucetAddress"] = $addr')
-
-  chain_wallets=$(echo "$chain_wallets" | jq \
-    --arg addr "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266" \
-    --arg private_key "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80" \
-    '.["l2FaucetPrivateKey"] = $private_key | .["l2FaucetAddress"] = $addr')
-    
   # Add this chain's wallet information to the main JSON object
   wallets_json=$(echo "$wallets_json" | jq \
     --arg chain_id "$chain_id" \
