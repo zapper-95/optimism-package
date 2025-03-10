@@ -74,9 +74,7 @@ def external_l1_network_params_input_parser(plan, input_args):
 
 
 def input_parser(plan, input_args):
-    plan.print("HEÉeee")
     sanity_check.sanity_check(plan, input_args)
-    plan.print("have sanity!")
     results = parse_network_params(plan, input_args)
     plan.print(results)
     results["global_log_level"] = "info"
@@ -206,8 +204,11 @@ def input_parser(plan, input_args):
                     isthmus_time_offset=result["network_params"]["isthmus_time_offset"],
                     interop_time_offset=result["network_params"]["interop_time_offset"],
                     fund_dev_accounts=result["network_params"]["fund_dev_accounts"],
+                    sequencer_fee_recipient=result["network_params"]["sequencer_fee_recipient"],
+                    sequencer_fee_receiver=result["network_params"]["sequencer_fee_receiver"],
                 ),
                 batcher_params=struct(
+                    address=result["batcher_params"]["address"],
                     image=result["batcher_params"]["image"],
                     private_key = result["batcher_params"]["private_key"],
                     signer_endpoint = result["batcher_params"]["signer_endpoint"],
@@ -215,6 +216,7 @@ def input_parser(plan, input_args):
                     extra_params=result["batcher_params"]["extra_params"],
                 ),
                 challenger_params=struct(
+                    address=result["challenger_params"]["address"],
                     enabled=result["challenger_params"]["enabled"],
                     image=result["challenger_params"]["image"],
                     private_key=result["challenger_params"]["private_key"],
@@ -232,6 +234,7 @@ def input_parser(plan, input_args):
                     ],
                 ),
                 proposer_params=struct(
+                    address=result["proposer_params"]["address"],
                     image=result["proposer_params"]["image"],
                     private_key=result["proposer_params"]["private_key"],
                     signer_endpoint=result["proposer_params"]["signer_endpoint"],
@@ -241,11 +244,21 @@ def input_parser(plan, input_args):
                     proposal_interval=result["proposer_params"]["proposal_interval"],
                 ),
                 sequencer_params=struct(
+                    address=result["sequencer_params"]["address"],
                     image=result["sequencer_params"]["image"],
                     private_key = result["sequencer_params"]["private_key"],
                     signer_endpoint=result["sequencer_params"]["signer_endpoint"],
                     signer_address=result["sequencer_params"]["signer_address"],
                     extra_params=result["sequencer_params"]["extra_params"],
+                ),
+                l1_proxy_admin_params=struct(
+                    address=result["l1_proxy_admin_params"]["address"]
+                ),
+                l2_proxy_admin_params=struct(
+                    address=result["l2_proxy_admin_params"]["address"]
+                ),
+                system_config_owner_params=struct(
+                    address=result["system_config_owner_params"]["address"]
                 ),
                 mev_params=struct(
                     rollup_boost_image=result["mev_params"]["rollup_boost_image"],
@@ -277,11 +290,17 @@ def input_parser(plan, input_args):
         global_node_selectors=results["global_node_selectors"],
         global_tolerations=results["global_tolerations"],
         persistent=results["persistent"],
+        deployment_type=results["deployment_type"],
     )
 
 
 def parse_network_params(plan, input_args):
     results = {}
+
+
+    # configure deployment type
+    results["deployment_type"] = input_args["deployment_type"]
+
 
     # configure observability
 
@@ -335,11 +354,20 @@ def parse_network_params(plan, input_args):
         challenger_params.update(chain.get("challenger_params", {}))
         check_signer_params(challenger_params, "challenger")
 
-
-
         sequencer_params = default_sequencer_params()
         sequencer_params.update(chain.get("sequencer_params", {}))
         check_signer_params(sequencer_params, "sequencer")
+
+        l1_proxy_admin_params = default_l1_proxy_admin_params()
+        l1_proxy_admin_params.update(chain.get("l1_proxy_admin_params", {}))
+
+        l2_proxy_admin_params = default_l2_proxy_admin_params()
+        l2_proxy_admin_params.update(chain.get("l2_proxy_admin_params", {}))
+
+
+        system_config_owner_params = default_system_config_owner_params()
+        system_config_owner_params.update(chain.get("system_config_owner_params", {}))
+
 
 
         mev_params = default_mev_params()
@@ -422,6 +450,9 @@ def parse_network_params(plan, input_args):
             "challenger_params": challenger_params,
             "proposer_params": proposer_params,
             "sequencer_params": sequencer_params,
+            "l1_proxy_admin_params": l1_proxy_admin_params,
+            "l2_proxy_admin_params": l2_proxy_admin_params,
+            "system_config_owner_params": system_config_owner_params,
             "mev_params": mev_params,
             "da_server_params": da_server_params,
             "additional_services": chain.get(
@@ -471,6 +502,7 @@ def default_optimism_params():
         "global_node_selectors": {},
         "global_tolerations": [],
         "persistent": False,
+        "deployment_type": "testnet",
     }
 
 
@@ -547,6 +579,9 @@ def default_chains():
             "proposer_params": default_proposer_params(),
             "challenger_params": default_challenger_params(),
             "sequencer_params": default_sequencer_params(),
+            "l1_proxy_admin_params": default_l1_proxy_admin_params(),
+            "l2_proxy_admin_params": default_l2_proxy_admin_params(),
+            "system_config_owner_params": default_system_config_owner_params(),
             "mev_params": default_mev_params(),
             "da_server_params": default_da_server_params(),
             "additional_services": DEFAULT_ADDITIONAL_SERVICES,
@@ -566,6 +601,26 @@ def default_network_params():
         "isthmus_time_offset": None,
         "interop_time_offset": None,
         "fund_dev_accounts": True,
+        "sequencer_fee_recipient": "0x",
+        "sequencer_fee_receiver": "0x"
+    }
+
+
+
+def default_l1_proxy_admin_params():
+    return {
+        "address": "0x255fcBEC3d6984215a97389d83f03B608A8FA452"
+    }
+
+
+def default_l2_proxy_admin_params():
+    return {
+        "address": "0x255fcBEC3d6984215a97389d83f03B608A8FA452"
+    }
+
+def default_system_config_owner_params():
+    return {
+        "address": "0x255fcBEC3d6984215a97389d83f03B608A8FA452"
     }
 
 

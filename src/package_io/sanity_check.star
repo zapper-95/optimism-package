@@ -91,10 +91,13 @@ SUBCATEGORY_PARAMS = {
         "isthmus_time_offset",
         "interop_time_offset",
         "fund_dev_accounts",
+        "sequencer_fee_recipient",
+        "sequencer_fee_receiver",
     ],
-    "batcher_params": ["image", "private_key", "signer_endpoint", "signer_address", "extra_params"],
-    "proposer_params": ["image", "private_key", "signer_endpoint", "signer_address", "extra_params", "game_type", "proposal_interval"],
+    "batcher_params": ["address", "image", "private_key", "signer_endpoint", "signer_address", "extra_params"],
+    "proposer_params": ["address", "image", "private_key", "signer_endpoint", "signer_address", "extra_params", "game_type", "proposal_interval"],
     "challenger_params": [
+        "address",
         "enabled",
         "image",
         "private_key",
@@ -105,7 +108,11 @@ SUBCATEGORY_PARAMS = {
         "cannon_prestates_url",
         "cannon_trace_types",
     ],
-    "sequencer_params":["private_key", "signer_endpoint", "signer_address"],
+    "sequencer_params":["address", "private_key", "signer_endpoint", "signer_address"],
+    "l1_proxy_admin_params": ["address"],
+    "l2_proxy_admin_params": ["address"],
+    "system_config_owner_params": ["address"],
+
     "mev_params": ["rollup_boost_image", "builder_host", "builder_port"],
     "da_server_params": [
         "image",
@@ -129,6 +136,7 @@ ADDITIONAL_SERVICES_PARAMS = [
 ]
 
 ROOT_PARAMS = [
+    "deployment_type",
     "observability",
     "interop",
     "altda_deploy_config",
