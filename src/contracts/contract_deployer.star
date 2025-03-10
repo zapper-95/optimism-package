@@ -20,6 +20,17 @@ CANNED_VALUES = {
 }
 
 
+def add_signer_info(params, role, signer_info):
+    if params.private_key:
+        signer_info[role] = {"private_key": params.private_key}
+    else:
+        signer_info[role] = {
+            "signer_address": params.signer_address,
+            "signer_endpoint": params.signer_endpoint,
+        }
+
+
+
 def deploy_contracts(
     plan, priv_key, l1_config_env_vars, optimism_args, l1_network, altda_args
 ):
@@ -87,57 +98,19 @@ def deploy_contracts(
             run='bash /fund-script/fund.sh "{0}"'.format(l2_chain_ids),
         )
     else:
+
+
         signer_info = {}
         chain = optimism_args.chains[0]
-
-        # proposer
-        if chain.proposer_params.private_key:
-            signer_info["proposer"] = {
-                "private_key": chain.proposer_params.private_key
-            }
-        else:
-            signer_info["proposer"] = {
-                "signer_address": chain.proposer_params.signer_address,
-                "signer_endpoint": chain.proposer_params.signer_endpoint
-            }
-
-
-        # batcher
-        if chain.batcher_params.private_key:
-            signer_info["batcher"] = {
-                "private_key": optimism_args.chains[0].batcher_params.private_key
-            }
-        else:
-            signer_info["batcher"] = {
-                "signer_address": optimism_args.chains[0].batcher_params.signer_address,
-                "signer_endpoint": optimism_args.chains[0].batcher_params.signer_endpoint
-            }
-
-
-        # sequencer
-        if chain.sequencer_params.private_key:
-            signer_info["sequencer"] = {
-                "private_key": chain.sequencer_params.private_key
-            }
-        else:
-            signer_info["sequencer"] = {
-                "signer_address": chain.sequencer_params.signer_address,
-                "signer_endpoint": chain.sequencer_params.signer_endpoint
-            }
-
-        # challenger
-        if chain.challenger_params.private_key:
-            signer_info["challenger"] = {
-                "private_key": chain.challenger_params.private_key
-            }
-        else:
-            signer_info["challenger"] = {
-                "signer_address": chain.challenger_params.signer_address,
-                "signer_endpoint": chain.challenger_params.signer_endpoint
-            }
-
+    
+        add_signer_info(chain.proposer_params, "proposer", signer_info)
+        add_signer_info(chain.batcher_params, "batcher", signer_info)
+        add_signer_info(chain.sequencer_params, "sequencer", signer_info)
+        add_signer_info(chain.challenger_params, "challenger", signer_info)
         # serialise to JSON
         signer_info_json = json.encode(signer_info)
+
+
         plan.run_sh(
             name="op-deployer-collect",
             description="Collect keys and write to file",
@@ -146,9 +119,6 @@ def deploy_contracts(
                 "SIGNER_INFORMATION": signer_info_json,
                 "DEPLOYER_PRIVATE_KEY": priv_key,
                 "L1_NETWORK": str(l1_network),
-                "FUND_PRIVATE_KEY": ethereum_package_genesis_constants.PRE_FUNDED_ACCOUNTS[
-                    19
-                ].private_key,
             }
             | l1_config_env_vars,
             store=[
