@@ -303,8 +303,10 @@ def parse_network_params(plan, input_args):
 
 
     # configure deployment type
-    results["deployment_type"] = input_args["deployment_type"]
-
+    results["deployment_type"] = input_args.get("deployment_type", "devnet")
+    
+    if results["deployment_type"] != "devnet" and results["deployment_type"] != "testnet":
+        fail("Invalid deployment type '{0}'. Must be 'devnet' or 'testnet'".format(results["deployment_type"]))
 
     # configure observability
 
