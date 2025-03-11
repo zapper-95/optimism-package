@@ -112,7 +112,7 @@ SUBCATEGORY_PARAMS = {
     "l1_proxy_admin_params": ["address"],
     "l2_proxy_admin_params": ["address"],
     "system_config_owner_params": ["address"],
-
+    "gas_params": ["gas_limit", "eip_1559_elasticity", "eip_1559_denominator", "base_fee_scalar", "blob_base_fee_scalar"],
     "mev_params": ["rollup_boost_image", "builder_host", "builder_port"],
     "da_server_params": [
         "image",

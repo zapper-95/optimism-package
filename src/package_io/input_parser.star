@@ -256,6 +256,13 @@ def input_parser(plan, input_args):
                 system_config_owner_params=struct(
                     address=result["system_config_owner_params"]["address"]
                 ),
+                gas_params = struct(
+                    eip_1559_denominator = result["gas_params"]["eip_1559_denominator"],
+                    # let denominatory canyon be the same as the denominator
+                    eip_1559_denominator_canyon = result["gas_params"]["eip_1559_denominator"],
+                    eip_1559_elasticity = result["gas_params"]["eip_1559_elasticity"],
+                ),
+
                 mev_params=struct(
                     rollup_boost_image=result["mev_params"]["rollup_boost_image"],
                     builder_host=result["mev_params"]["builder_host"],
@@ -365,6 +372,8 @@ def parse_network_params(plan, input_args):
         system_config_owner_params.update(chain.get("system_config_owner_params", {}))
 
 
+        gas_params = default_gas_params()
+        gas_params.update(chain.get("gas_params", {}))
 
         mev_params = default_mev_params()
         mev_params.update(chain.get("mev_params", {}))
@@ -449,6 +458,7 @@ def parse_network_params(plan, input_args):
             "l1_proxy_admin_params": l1_proxy_admin_params,
             "l2_proxy_admin_params": l2_proxy_admin_params,
             "system_config_owner_params": system_config_owner_params,
+            "gas_params": gas_params,
             "mev_params": mev_params,
             "da_server_params": da_server_params,
             "additional_services": chain.get(
@@ -761,4 +771,13 @@ def default_da_server_params():
         "enabled": False,
         "image": DEFAULT_DA_SERVER_PARAMS["image"],
         "cmd": DEFAULT_DA_SERVER_PARAMS["cmd"],
+    }
+
+def default_gas_params():
+    return{
+        "gas_limit": "0x1c9c380",
+        "eip_1559_denominator": 50,
+        "eip_1559_elasticity": 6,
+        "base_fee_scalar": "0x010000000000000000000000000000000000000000000000000c5fc500000558",
+        "blob_base_fee_scalar": 1,
     }
