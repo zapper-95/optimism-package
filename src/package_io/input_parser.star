@@ -257,10 +257,11 @@ def input_parser(plan, input_args):
                     address=result["system_config_owner_params"]["address"]
                 ),
                 gas_params = struct(
+                    gas_limit = result["gas_params"]["gas_limit"],
                     eip_1559_denominator = result["gas_params"]["eip_1559_denominator"],
-                    # let denominatory canyon be the same as the denominator
-                    eip_1559_denominator_canyon = result["gas_params"]["eip_1559_denominator"],
                     eip_1559_elasticity = result["gas_params"]["eip_1559_elasticity"],
+                    base_fee_scalar = result["gas_params"]["base_fee_scalar"],
+                    blob_base_fee_scalar = result["gas_params"]["blob_base_fee_scalar"]
                 ),
 
                 mev_params=struct(
@@ -497,7 +498,7 @@ def check_signer_params(role_params, role):
 
 
 
-def default_optimism_params():
+def default_optimism_args():
     return {
         "observability": default_observability_params(),
         "interop": default_interop_params(),

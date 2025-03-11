@@ -58,15 +58,12 @@ optimism_package:
         address: "0xCFDA3C8C66dd838BdC4A376b5259dce9064e9857"
       l2_proxy_admin_params: 
         address: "0xD3F2c5AFb2D76f5579F326b0cD7DA5F5a4126c35"
-
       gas_params:
         gas_limit: 60000000
         eip_1559_elasticity: 6
         eip_1559_denominator: 50
-        base_fee_scalar: "0x010000000000000000000000000000000000000000000000000c5fc500000558"
+        base_fee_scalar: 2
         blob_base_fee_scalar: 1
-
-
       mev_params:
         builder_host: ""
         builder_port: ""
