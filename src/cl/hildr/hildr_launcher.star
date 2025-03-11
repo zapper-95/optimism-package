@@ -223,7 +223,6 @@ def get_beacon_config(
         observability.expose_metrics_port(ports)
 
     if sequencer_enabled:
-        sequencer private key can't be used by hildr yet
         sequencer_private_key = util.read_network_config_value(
             plan,
             launcher.deployment_output,

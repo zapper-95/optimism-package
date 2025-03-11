@@ -5,6 +5,7 @@ FACTORY_ADDRESS = "0x4e59b44847b379578588920cA78FbF26c0B4956C"
 FACTORY_DEPLOYER_CODE = "0xf8a58085174876e800830186a08080b853604580600e600039806000f350fe7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf31ba02222222222222222222222222222222222222222222222222222222222222222a02222222222222222222222222222222222222222222222222222222222222222"
 
 FUND_SCRIPT_FILEPATH = "../../static_files/scripts"
+COLLECT_SCRIPT_FILEPATH = "../../static_files/scripts"
 
 utils = import_module("../util.star")
 
@@ -17,6 +18,17 @@ CANNED_VALUES = {
     "eip1559DenominatorCanyon": 250,
     "eip1559Elasticity": 6,
 }
+
+
+def add_signer_info(params, role, signer_info):
+    if params.private_key:
+        signer_info[role] = {"private_key": params.private_key}
+    else:
+        signer_info[role] = {
+            "signer_address": params.signer_address,
+            "signer_endpoint": params.signer_endpoint,
+        }
+
 
 
 def deploy_contracts(
@@ -52,8 +64,12 @@ def deploy_contracts(
         src=FUND_SCRIPT_FILEPATH,
         name="op-deployer-fund-script",
     )
+    collect_script_artifact = plan.upload_files(
+        src=COLLECT_SCRIPT_FILEPATH,
+        name="op-deployer-collect-script",
+    )
     devnet = optimism_args.deployment_type == "devnet"
-    plan.print("devnet: {0}".format(devnet))    
+    plan.print("devnet: {0}".format(devnet))
 
     if devnet:
         plan.run_sh(
@@ -82,19 +98,42 @@ def deploy_contracts(
             run='bash /fund-script/fund.sh "{0}"'.format(l2_chain_ids),
         )
     else:
-        # get the address of the deployer by running cast on the priv key
-        run = plan.run_sh(
-            name="get-deployer-address",
-            description="Get deployer address",
+
+
+        signer_info = {}
+        chain = optimism_args.chains[0]
+    
+        add_signer_info(chain.proposer_params, "proposer", signer_info)
+        add_signer_info(chain.batcher_params, "batcher", signer_info)
+        add_signer_info(chain.sequencer_params, "sequencer", signer_info)
+        add_signer_info(chain.challenger_params, "challenger", signer_info)
+        # serialise to JSON
+        signer_info_json = json.encode(signer_info)
+
+
+        plan.run_sh(
+            name="op-deployer-collect",
+            description="Collect keys and write to file",
             image=utils.DEPLOYMENT_UTILS_IMAGE,
-            env_vars={"PRIVATE_KEY": str(priv_key)},
-            run='echo -n $(cast wallet address "$PRIVATE_KEY")'
+            env_vars={
+                "SIGNER_INFORMATION": signer_info_json,
+                "DEPLOYER_PRIVATE_KEY": priv_key,
+                "L1_NETWORK": str(l1_network),
+            }
+            | l1_config_env_vars,
+            store=[
+                StoreSpec(
+                    src="/network-data",
+                    name="op-deployer-configs",
+                )
+            ],
+            files={
+                "/network-data": op_deployer_init.files_artifacts[0],
+                "/collect-script": collect_script_artifact,
+            },
+            run='bash /collect-script/collect.sh "{0}"'.format(l2_chain_ids),
         )
 
-        deployer_address = run.output
-
-        
-    plan.print("deployer_address: {0}".format(deployer_address))
     hardfork_schedule = []
     for index, chain in enumerate(optimism_args.chains):
         np = chain.network_params
@@ -119,11 +158,11 @@ def deploy_contracts(
         "l1ContractsLocator": optimism_args.op_contract_deployer_params.l1_artifacts_locator,
         "l2ContractsLocator": optimism_args.op_contract_deployer_params.l2_artifacts_locator,
         "superchainRoles": {
-            "guardian": read_chain_cmd("l1ProxyAdmin", l2_chain_ids_list[0]) if devnet else deployer_address,
+            "guardian": read_chain_cmd("l1ProxyAdmin", l2_chain_ids_list[0]),
             "protocolVersionsOwner": read_chain_cmd(
                 "l1ProxyAdmin", l2_chain_ids_list[0]
-            )if devnet else deployer_address,
-            "proxyAdminOwner": read_chain_cmd("l1ProxyAdmin", l2_chain_ids_list[0]) if devnet else deployer_address,
+            ),
+            "proxyAdminOwner": read_chain_cmd("l1ProxyAdmin", l2_chain_ids_list[0]),
         },
         "chains": [],
     }
@@ -155,19 +194,19 @@ def deploy_contracts(
                 },
                 "baseFeeVaultRecipient": read_chain_cmd(
                     "baseFeeVaultRecipient", chain_id
-                ) if devnet else chain.network_params.sequencer_fee_recipient,
-                "l1FeeVaultRecipient": read_chain_cmd("l1FeeVaultRecipient", chain_id) if devnet else chain.network_params.sequencer_fee_recipient,
+                ),
+                "l1FeeVaultRecipient": read_chain_cmd("l1FeeVaultRecipient", chain_id),
                 "sequencerFeeVaultRecipient": read_chain_cmd(
                     "sequencerFeeVaultRecipient", chain_id
-                ) if devnet else chain.network_params.sequencer_fee_recipient,
+                ) ,
                 "roles": {
-                    "batcher": read_chain_cmd("batcher", chain_id) if devnet else chain.batcher_params.address,
-                    "challenger": read_chain_cmd("challenger", chain_id) if devnet else chain.challenger_params.address,
-                    "l1ProxyAdminOwner": read_chain_cmd("l1ProxyAdmin", chain_id) if devnet else deployer_address,
-                    "l2ProxyAdminOwner": read_chain_cmd("l2ProxyAdmin", chain_id) if devnet else deployer_address,
-                    "proposer": read_chain_cmd("proposer", chain_id) if devnet else chain.proposer_params.address,
-                    "systemConfigOwner": read_chain_cmd("systemConfigOwner", chain_id) if devnet else deployer_address,
-                    "unsafeBlockSigner": read_chain_cmd("sequencer", chain_id) if devnet else chain.sequencer_params.address,
+                    "batcher": read_chain_cmd("batcher", chain_id) ,
+                    "challenger": read_chain_cmd("challenger", chain_id),
+                    "l1ProxyAdminOwner": read_chain_cmd("l1ProxyAdmin", chain_id),
+                    "l2ProxyAdminOwner": read_chain_cmd("l2ProxyAdmin", chain_id),
+                    "proposer": read_chain_cmd("proposer", chain_id),
+                    "systemConfigOwner": read_chain_cmd("systemConfigOwner", chain_id),
+                    "unsafeBlockSigner": read_chain_cmd("sequencer", chain_id),
                 },
                 "dangerousAdditionalDisputeGames": [
                     {
@@ -201,7 +240,7 @@ def deploy_contracts(
 
     plan.print(repr(intent))
     intent_json = json.encode(intent)
-    
+
     intent_json_artifact = utils.write_to_file(plan, intent_json, "/tmp", "intent.json")
 
     op_deployer_configure = plan.run_sh(
@@ -286,7 +325,8 @@ def deploy_contracts(
             ],
             files={
                 "/network-data": op_deployer_output.files_artifacts[0],
-                "/fund-script": fund_script_artifact,
+                "/fund-script": collect_script_artifact,
+
             },
             run='jq --from-file /fund-script/gen2spec.jq < "/network-data/genesis-$CHAIN_ID.json" > "/network-data/chainspec-$CHAIN_ID.json"',
         )

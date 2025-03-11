@@ -39,22 +39,18 @@ optimism_package:
         sequencer_fee_recipient: "0x255fcBEC3d6984215a97389d83f03B608A8FA452"
         sequencer_fee_receiver: "0x255fcBEC3d6984215a97389d83f03B608A8FA452"
       batcher_params:
-        address: "0x43AC3373B5878150b8600288d5098C77a3fd758F"
-        private_key: "b9f4adcd558ab4c920150f7960c891b6205525ff19bef211d19464f81d726f5b"
+        private_key: "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefa"
         #signer_address: '0xD0e9d614E8d5C5C3e7F09Dcb31CB3A7552deC836'
         #signer_endpoint: 'http://host.docker.internal:4000/key/65021b59-0433-47e7-975d-0dcbfe898f9e'
         extra_params: []
       challenger_params:
-        address: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-        private_key: "b9f4adcd558ab4c920150f7960c891b6205525ff19bef211d19464f81d726f5b"
+        private_key: "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefb"
         enabled: true
         extra_params: []
       sequencer_params:
-        address: "0x75dA2Ff67BE16c30195067b3CD40702E1F6D4EAE"
-        private_key: "b9f4adcd558ab4c920150f7960c891b6205525ff19bef211d19464f81d726f5b"
+        private_key: "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefc"
       proposer_params:
-        address: "0xD0e9d614E8d5C5C3e7F09Dcb31CB3A7552deC836"
-        private_key: "b9f4adcd558ab4c920150f7960c891b6205525ff19bef211d19464f81d726f5b"
+        private_key: "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefd"
       system_config_owner_params:
         address: "0xD7C403a8846c961Db06606BE89e04CD532d28f0B"      
       l1_proxy_admin_params:
