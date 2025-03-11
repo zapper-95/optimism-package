@@ -500,9 +500,9 @@ def check_signer_params(role_params, role):
 
 def default_optimism_args():
     return {
-        "observability": default_observability_params(),
-        "interop": default_interop_params(),
-        "altda": default_altda_deploy_config(),
+        #"observability": default_observability_params(),
+        #"interop": default_interop_params(),
+        #"altda": default_altda_deploy_config(),
         "chains": default_chains(),
         "op_contract_deployer_params": default_op_contract_deployer_params(),
         "global_log_level": "info",
@@ -589,6 +589,7 @@ def default_chains():
             "l1_proxy_admin_params": default_l1_proxy_admin_params(),
             "l2_proxy_admin_params": default_l2_proxy_admin_params(),
             "system_config_owner_params": default_system_config_owner_params(),
+            "gas_params": default_gas_params(),
             "mev_params": default_mev_params(),
             "da_server_params": default_da_server_params(),
             "additional_services": DEFAULT_ADDITIONAL_SERVICES,
