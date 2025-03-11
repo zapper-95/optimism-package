@@ -13,13 +13,6 @@ ethereum_package_genesis_constants = import_module(
     "github.com/ethpandaops/ethereum-package/src/prelaunch_data_generator/genesis_constants/genesis_constants.star"
 )
 
-CANNED_VALUES = {
-    "eip1559Denominator": 50,
-    "eip1559DenominatorCanyon": 250,
-    "eip1559Elasticity": 6,
-}
-
-
 def add_signer_info(params, role, signer_info):
     if params.private_key:
         signer_info[role] = {"private_key": params.private_key}
@@ -98,8 +91,6 @@ def deploy_contracts(
             run='bash /fund-script/fund.sh "{0}"'.format(l2_chain_ids),
         )
     else:
-
-
         signer_info = {}
         chain = optimism_args.chains[0]
     
@@ -183,9 +174,14 @@ def deploy_contracts(
 
     for i, chain in enumerate(optimism_args.chains):
         chain_id = str(chain.network_params.network_id)
-        intent_chain = dict(CANNED_VALUES)
+        intent_chain = dict()
+
         intent_chain.update(
             {
+                "eip1559Denominator": int(chain.gas_params.eip_1559_denominator),
+                # use denominator for denominator canyon
+                "eip1559DenominatorCanyon": int(chain.gas_params.eip_1559_denominator),
+                "eip1559Elasticity": int(chain.gas_params.eip_1559_elasticity),
                 "deployOverrides": {
                     "l2BlockTime": chain.network_params.seconds_per_slot,
                     "fundDevAccounts": True
