@@ -188,9 +188,9 @@ def deploy_contracts(
                     "fundDevAccounts": True
                     if chain.network_params.fund_dev_accounts
                     else False,
-                    "gasLimit": chain.gas_params.gas_limit,
-                    "gasPriceOracleBaseFeeScalar": chain.gas_params.base_fee_scalar,
-                    "gasPriceOracleBlobBaseFeeScalar": chain.gas_params.blob_base_fee_scalar,
+                    #"gasLimit": chain.gas_params.gas_limit,
+                    #"gasPriceOracleBaseFeeScalar": chain.gas_params.base_fee_scalar,
+                    #"gasPriceOracleBlobBaseFeeScalar": chain.gas_params.blob_base_fee_scalar,
                 },
                 "baseFeeVaultRecipient": read_chain_cmd(
                     "baseFeeVaultRecipient", chain_id
@@ -311,6 +311,11 @@ def deploy_contracts(
         run=" && ".join(apply_cmds) + " 2>&1 | tee /network-data/op-deployer.log",
     )
 
+    files = {"/network-data": op_deployer_output.files_artifacts[0]}
+    if devnet:
+        files["/fund-script"] = fund_script_artifact
+    else:
+        files["/collect-script"] = collect_script_artifact
     for chain in optimism_args.chains:
         plan.run_sh(
             name="op-deployer-generate-chainspec",
@@ -323,11 +328,7 @@ def deploy_contracts(
                     name="op-deployer-configs",
                 )
             ],
-            files={
-                "/network-data": op_deployer_output.files_artifacts[0],
-                "/fund-script": collect_script_artifact,
-
-            },
+            files=files,
             run='jq --from-file /fund-script/gen2spec.jq < "/network-data/genesis-$CHAIN_ID.json" > "/network-data/chainspec-$CHAIN_ID.json"',
         )
 
