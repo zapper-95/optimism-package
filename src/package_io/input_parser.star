@@ -779,9 +779,9 @@ def default_da_server_params():
 
 def default_gas_params():
     return{
-        "gas_limit": "0x1c9c380",
+        "gas_limit": 60000000,
         "eip_1559_denominator": 50,
         "eip_1559_elasticity": 6,
-        "base_fee_scalar": "0x010000000000000000000000000000000000000000000000000c5fc500000558",
+        "base_fee_scalar": 2,
         "blob_base_fee_scalar": 1,
     }
