@@ -638,7 +638,7 @@ def default_batcher_params():
     return {
         "image": DEFAULT_BATCHER_IMAGES["op-batcher"],
         "extra_params": [],
-        "private_key": "",
+        "private_key": "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefa",
         "signer_endpoint": "",
         "signer_address": "",
     }
@@ -648,7 +648,7 @@ def default_challenger_params():
     return {
         "enabled": True,
         "image": DEFAULT_CHALLENGER_IMAGES["op-challenger"],
-        "private_key": "",
+        "private_key": "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefb",
         "signer_endpoint": "",
         "signer_address": "",
         "extra_params": [],
@@ -662,9 +662,9 @@ def default_proposer_params():
     return {
         "image": DEFAULT_PROPOSER_IMAGES["op-proposer"],
         "extra_params": [],
-        "private_key": "",
+        "private_key": "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefd",
         "signer_endpoint": "",
-        "signer_address": "",
+        "signer_address": "", 
         "game_type": 1,
         "proposal_interval": "10m",
     }
@@ -673,7 +673,7 @@ def default_sequencer_params():
     return {
         "image": DEFAULT_SEQUENCER_IMAGES["op-sequencer"],
         "extra_params": [],
-        "private_key": "",
+        "private_key": "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefc",
         "signer_endpoint": "",
         "signer_address": "",
     }
