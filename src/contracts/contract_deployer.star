@@ -188,9 +188,9 @@ def deploy_contracts(
                     "fundDevAccounts": True
                     if chain.network_params.fund_dev_accounts
                     else False,
-                    #"gasLimit": chain.gas_params.gas_limit,
-                    #"gasPriceOracleBaseFeeScalar": chain.gas_params.base_fee_scalar,
-                    #"gasPriceOracleBlobBaseFeeScalar": chain.gas_params.blob_base_fee_scalar,
+                    "l2GenesisBlockGasLimit": "0x17D7840",
+                    "gasPriceOracleBaseFeeScalar": chain.gas_params.base_fee_scalar,
+                    "gasPriceOracleBlobBaseFeeScalar": chain.gas_params.blob_base_fee_scalar,
                 },
                 "baseFeeVaultRecipient": read_chain_cmd(
                     "baseFeeVaultRecipient", chain_id

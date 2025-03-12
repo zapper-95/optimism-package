@@ -59,7 +59,7 @@ optimism_package:
       l2_proxy_admin_params: 
         address: "0xD3F2c5AFb2D76f5579F326b0cD7DA5F5a4126c35"
       gas_params:
-        gas_limit: 60000000
+        gas_limit: "0x17D7840"
         eip_1559_elasticity: 6
         eip_1559_denominator: 50
         base_fee_scalar: 2
