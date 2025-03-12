@@ -31,18 +31,26 @@ def run(plan, args):
     # If no args are provided, use the default values with minimal preset
     ethereum_args = args.get("ethereum_package", {})
     external_l1_args = args.get("external_l1_network_params", {})
+
+    deployment_type = ""
     if external_l1_args:
+        deployment_type = "testnet"
         external_l1_args = input_parser.external_l1_network_params_input_parser(
             plan, external_l1_args
         )
     else:
+        deployment_type = "devnet"
         if "network_params" not in ethereum_args:
             ethereum_args.update(input_parser.default_ethereum_package_network_params())
+        if "participants" not in ethereum_args:
+            ethereum_args.update(input_parser.default_ethereum_package_participants())
 
+    
     # need to do a raw get here in case only optimism_package is provided.
     # .get will return None if the key is in the config with a None value.
-    optimism_args = args.get("optimism_package") or input_parser.default_optimism_args()
-    optimism_args_with_right_defaults = input_parser.input_parser(plan, optimism_args)
+    optimism_args = args.get("optimism_package") or input_parser.default_optimism_args(deployment_type)
+
+    optimism_args_with_right_defaults = input_parser.input_parser(plan, optimism_args, deployment_type)
     global_tolerations = optimism_args_with_right_defaults.global_tolerations
     global_node_selectors = optimism_args_with_right_defaults.global_node_selectors
     global_log_level = optimism_args_with_right_defaults.global_log_level
