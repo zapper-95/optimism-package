@@ -73,9 +73,9 @@ def external_l1_network_params_input_parser(plan, input_args):
     )
 
 
-def input_parser(plan, input_args):
+def input_parser(plan, input_args, deployment_type):
     sanity_check.sanity_check(plan, input_args)
-    results = parse_network_params(plan, input_args)
+    results = parse_network_params(plan, input_args, deployment_type)
     plan.print(results)
     results["global_log_level"] = "info"
     results["global_node_selectors"] = {}
@@ -298,16 +298,16 @@ def input_parser(plan, input_args):
     )
 
 
-def parse_network_params(plan, input_args):
+def parse_network_params(plan, input_args, deployment_type):
     results = {}
 
 
     # configure deployment type
-    results["deployment_type"] = input_args.get("deployment_type", "devnet")
+    results["deployment_type"] = deployment_type
     
     if results["deployment_type"] != "devnet" and results["deployment_type"] != "testnet":
         fail("Invalid deployment type '{0}'. Must be 'devnet' or 'testnet'".format(results["deployment_type"]))
-
+    
     # configure observability
 
     results["observability"] = default_observability_params()
@@ -348,36 +348,35 @@ def parse_network_params(plan, input_args):
         network_params = default_network_params()
         network_params.update(chain.get("network_params", {}))
 
-        if results["deployment_type"] == "testnet":
-            batcher_params = default_batcher_params()
-            batcher_params.update(chain.get("batcher_params", {}))
+        batcher_params = default_batcher_params(deployment_type)
+        batcher_params.update(chain.get("batcher_params", {}))
+
+        proposer_params = default_proposer_params(deployment_type)
+        proposer_params.update(chain.get("proposer_params", {}))
+
+        challenger_params = default_challenger_params(deployment_type)
+        challenger_params.update(chain.get("challenger_params", {}))
+
+        sequencer_params = default_sequencer_params(deployment_type)
+        sequencer_params.update(chain.get("sequencer_params", {}))
+  
+        l1_proxy_admin_params = default_l1_proxy_admin_params()
+        l1_proxy_admin_params.update(chain.get("l1_proxy_admin_params", {}))
+
+        l2_proxy_admin_params = default_l2_proxy_admin_params()
+        l2_proxy_admin_params.update(chain.get("l2_proxy_admin_params", {}))
+
+        system_config_owner_params = default_system_config_owner_params()
+        system_config_owner_params.update(chain.get("system_config_owner_params", {}))
+
+        gas_params = default_gas_params()
+        gas_params.update(chain.get("gas_params", {}))
+
+        if deployment_type == "testnet":
             check_signer_params(batcher_params, "batcher")
-
-            proposer_params = default_proposer_params()
-            proposer_params.update(chain.get("proposer_params", {}))
             check_signer_params(proposer_params, "proposer")
-
-            challenger_params = default_challenger_params()
-            challenger_params.update(chain.get("challenger_params", {}))
             check_signer_params(challenger_params, "challenger")
-
-            sequencer_params = default_sequencer_params()
-            sequencer_params.update(chain.get("sequencer_params", {}))
             check_signer_params(sequencer_params, "sequencer")
-
-            l1_proxy_admin_params = default_l1_proxy_admin_params()
-            l1_proxy_admin_params.update(chain.get("l1_proxy_admin_params", {}))
-
-            l2_proxy_admin_params = default_l2_proxy_admin_params()
-            l2_proxy_admin_params.update(chain.get("l2_proxy_admin_params", {}))
-
-
-            system_config_owner_params = default_system_config_owner_params()
-            system_config_owner_params.update(chain.get("system_config_owner_params", {}))
-
-
-            gas_params = default_gas_params()
-            gas_params.update(chain.get("gas_params", {}))
 
         mev_params = default_mev_params()
         mev_params.update(chain.get("mev_params", {}))
@@ -501,18 +500,14 @@ def check_signer_params(role_params, role):
 
 
 
-def default_optimism_args():
-    return {
-        #"observability": default_observability_params(),
-        #"interop": default_interop_params(),
-        #"altda": default_altda_deploy_config(),
-        "chains": default_chains(),
+def default_optimism_args(deployment_type):
+    return{
+        "chains": default_chains(deployment_type),
         "op_contract_deployer_params": default_op_contract_deployer_params(),
         "global_log_level": "info",
         "global_node_selectors": {},
         "global_tolerations": [],
         "persistent": False,
-        "deployment_type": "testnet",
     }
 
 
@@ -580,15 +575,15 @@ def default_mev_params():
     }
 
 
-def default_chains():
+def default_chains(deployment_type="devnet"):
     return [
         {
             "participants": [default_participant()],
             "network_params": default_network_params(),
-            "batcher_params": default_batcher_params(),
-            "proposer_params": default_proposer_params(),
-            "challenger_params": default_challenger_params(),
-            "sequencer_params": default_sequencer_params(),
+            "batcher_params": default_batcher_params(deployment_type),
+            "proposer_params": default_proposer_params(deployment_type),
+            "challenger_params": default_challenger_params(deployment_type),
+            "sequencer_params": default_sequencer_params(deployment_type),
             "l1_proxy_admin_params": default_l1_proxy_admin_params(),
             "l2_proxy_admin_params": default_l2_proxy_admin_params(),
             "system_config_owner_params": default_system_config_owner_params(),
@@ -635,21 +630,23 @@ def default_system_config_owner_params():
     }
 
 
-def default_batcher_params():
-    return {
+def default_batcher_params(deployment_type):
+    params = {
         "image": DEFAULT_BATCHER_IMAGES["op-batcher"],
         "extra_params": [],
-        "private_key": "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefa",
+        "private_key": "",
         "signer_endpoint": "",
         "signer_address": "",
     }
+    if deployment_type == "testnet":
+        params["private_key"] = "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aef9"
+    return params
 
-
-def default_challenger_params():
-    return {
+def default_challenger_params(deployment_type):
+    params = {
         "enabled": True,
         "image": DEFAULT_CHALLENGER_IMAGES["op-challenger"],
-        "private_key": "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefb",
+        "private_key": "",
         "signer_endpoint": "",
         "signer_address": "",
         "extra_params": [],
@@ -657,27 +654,37 @@ def default_challenger_params():
         "cannon_prestates_url": "https://storage.googleapis.com/oplabs-network-data/proofs/op-program/cannon",
         "cannon_trace_types": ["cannon", "permissioned"],
     }
+    if deployment_type == "testnet":
+        params["private_key"] = "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefb"
+    return params
 
 
-def default_proposer_params():
-    return {
+def default_proposer_params(deployment_type):
+    params = {
         "image": DEFAULT_PROPOSER_IMAGES["op-proposer"],
         "extra_params": [],
-        "private_key": "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefd",
+        "private_key": "",
         "signer_endpoint": "",
         "signer_address": "", 
         "game_type": 1,
         "proposal_interval": "10m",
     }
+    if deployment_type == "testnet":
+        params["private_key"] = "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefc"
+    return params
 
-def default_sequencer_params():
-    return {
+
+def default_sequencer_params(deployment_type):
+    params = {
         "image": DEFAULT_SEQUENCER_IMAGES["op-sequencer"],
         "extra_params": [],
-        "private_key": "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefc",
+        "private_key": "",
         "signer_endpoint": "",
         "signer_address": "",
     }
+    if deployment_type == "testnet":
+        params["private_key"] = "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefd"
+    return params
 
 
 def default_participant():
@@ -750,6 +757,17 @@ def default_op_contract_deployer_params():
         "global_deploy_overrides": default_op_contract_deployer_global_deploy_overrides(),
     }
 
+def default_ethereum_package_participants():
+    return{
+        "participants":
+        [
+            {
+            "el_type": "geth",
+            "cl_type": "teku",
+            "cl_image": "consensys/teku:latest-amd64"   
+            }
+        ]
+    }
 
 def default_ethereum_package_network_params():
     return {
