@@ -348,35 +348,36 @@ def parse_network_params(plan, input_args):
         network_params = default_network_params()
         network_params.update(chain.get("network_params", {}))
 
-        batcher_params = default_batcher_params()
-        batcher_params.update(chain.get("batcher_params", {}))
-        check_signer_params(batcher_params, "batcher")
+        if results["deployment_type"] == "testnet":
+            batcher_params = default_batcher_params()
+            batcher_params.update(chain.get("batcher_params", {}))
+            check_signer_params(batcher_params, "batcher")
 
-        proposer_params = default_proposer_params()
-        proposer_params.update(chain.get("proposer_params", {}))
-        check_signer_params(proposer_params, "proposer")
+            proposer_params = default_proposer_params()
+            proposer_params.update(chain.get("proposer_params", {}))
+            check_signer_params(proposer_params, "proposer")
 
-        challenger_params = default_challenger_params()
-        challenger_params.update(chain.get("challenger_params", {}))
-        check_signer_params(challenger_params, "challenger")
+            challenger_params = default_challenger_params()
+            challenger_params.update(chain.get("challenger_params", {}))
+            check_signer_params(challenger_params, "challenger")
 
-        sequencer_params = default_sequencer_params()
-        sequencer_params.update(chain.get("sequencer_params", {}))
-        check_signer_params(sequencer_params, "sequencer")
+            sequencer_params = default_sequencer_params()
+            sequencer_params.update(chain.get("sequencer_params", {}))
+            check_signer_params(sequencer_params, "sequencer")
 
-        l1_proxy_admin_params = default_l1_proxy_admin_params()
-        l1_proxy_admin_params.update(chain.get("l1_proxy_admin_params", {}))
+            l1_proxy_admin_params = default_l1_proxy_admin_params()
+            l1_proxy_admin_params.update(chain.get("l1_proxy_admin_params", {}))
 
-        l2_proxy_admin_params = default_l2_proxy_admin_params()
-        l2_proxy_admin_params.update(chain.get("l2_proxy_admin_params", {}))
-
-
-        system_config_owner_params = default_system_config_owner_params()
-        system_config_owner_params.update(chain.get("system_config_owner_params", {}))
+            l2_proxy_admin_params = default_l2_proxy_admin_params()
+            l2_proxy_admin_params.update(chain.get("l2_proxy_admin_params", {}))
 
 
-        gas_params = default_gas_params()
-        gas_params.update(chain.get("gas_params", {}))
+            system_config_owner_params = default_system_config_owner_params()
+            system_config_owner_params.update(chain.get("system_config_owner_params", {}))
+
+
+            gas_params = default_gas_params()
+            gas_params.update(chain.get("gas_params", {}))
 
         mev_params = default_mev_params()
         mev_params.update(chain.get("mev_params", {}))
