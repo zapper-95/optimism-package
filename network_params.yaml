@@ -27,7 +27,6 @@ optimism_package:
         node_selectors: {}
         tolerations: []
         count: 1
-      
       network_params:
         network: "kurtosis"
         network_id: "2151908"
@@ -51,12 +50,20 @@ optimism_package:
         private_key: "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefc"
       proposer_params:
         private_key: "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefd"
+      
+      # currently these are ignored and have the address of the deployer, so that it has admin controls
       system_config_owner_params:
         address: "0xD7C403a8846c961Db06606BE89e04CD532d28f0B"      
       l1_proxy_admin_params:
         address: "0xCFDA3C8C66dd838BdC4A376b5259dce9064e9857"
       l2_proxy_admin_params: 
         address: "0xD3F2c5AFb2D76f5579F326b0cD7DA5F5a4126c35"
+      gas_params:
+        gas_limit: "0x17D7840"
+        eip_1559_elasticity: 6
+        eip_1559_denominator: 50
+        base_fee_scalar: 2
+        blob_base_fee_scalar: 1
       mev_params:
         builder_host: ""
         builder_port: ""
