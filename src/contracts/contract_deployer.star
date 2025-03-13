@@ -13,6 +13,7 @@ ethereum_package_genesis_constants = import_module(
     "github.com/ethpandaops/ethereum-package/src/prelaunch_data_generator/genesis_constants/genesis_constants.star"
 )
 
+
 def add_signer_info(params, role, signer_info):
     if params.private_key:
         signer_info[role] = {"private_key": params.private_key}
@@ -21,7 +22,6 @@ def add_signer_info(params, role, signer_info):
             "signer_address": params.signer_address,
             "signer_endpoint": params.signer_endpoint,
         }
-
 
 
 def deploy_contracts(
@@ -93,14 +93,13 @@ def deploy_contracts(
     else:
         signer_info = {}
         chain = optimism_args.chains[0]
-    
+
         add_signer_info(chain.proposer_params, "proposer", signer_info)
         add_signer_info(chain.batcher_params, "batcher", signer_info)
         add_signer_info(chain.sequencer_params, "sequencer", signer_info)
         add_signer_info(chain.challenger_params, "challenger", signer_info)
         # serialise to JSON
         signer_info_json = json.encode(signer_info)
-
 
         plan.run_sh(
             name="op-deployer-collect",
@@ -182,7 +181,6 @@ def deploy_contracts(
                 # use denominator for denominator canyon
                 "eip1559DenominatorCanyon": int(chain.gas_params.eip_1559_denominator),
                 "eip1559Elasticity": int(chain.gas_params.eip_1559_elasticity),
-
                 "deployOverrides": {
                     "l2BlockTime": chain.network_params.seconds_per_slot,
                     "fundDevAccounts": True
@@ -191,13 +189,11 @@ def deploy_contracts(
                     "l2GenesisBlockGasLimit": "0x17D7840",
                     "gasPriceOracleBaseFeeScalar": chain.gas_params.base_fee_scalar,
                     "gasPriceOracleBlobBaseFeeScalar": chain.gas_params.blob_base_fee_scalar,
-
                     "proofMaturityDelaySeconds": chain.network_params.withdrawal_delay,
                     "baseFeeVaultWithdrawalNetwork": chain.network_params.fee_withdrawal_network,
                     "l1FeeVaultWithdrawalNetwork": chain.network_params.fee_withdrawal_network,
                     "sequencerFeeVaultWithdrawalNetwork": chain.network_params.fee_withdrawal_network,
                     "disputeGameFinalityDelaySeconds": chain.network_params.dispute_game_finality_delay,
-
                 },
                 "baseFeeVaultRecipient": read_chain_cmd(
                     "baseFeeVaultRecipient", chain_id
@@ -205,9 +201,9 @@ def deploy_contracts(
                 "l1FeeVaultRecipient": read_chain_cmd("l1FeeVaultRecipient", chain_id),
                 "sequencerFeeVaultRecipient": read_chain_cmd(
                     "sequencerFeeVaultRecipient", chain_id
-                ) ,
+                ),
                 "roles": {
-                    "batcher": read_chain_cmd("batcher", chain_id) ,
+                    "batcher": read_chain_cmd("batcher", chain_id),
                     "challenger": read_chain_cmd("challenger", chain_id),
                     "l1ProxyAdminOwner": read_chain_cmd("l1ProxyAdmin", chain_id),
                     "l2ProxyAdminOwner": read_chain_cmd("l2ProxyAdmin", chain_id),
@@ -243,7 +239,6 @@ def deploy_contracts(
         for index, fork_key, activation_timestamp in hardfork_schedule:
             intent_chain["deployOverrides"][fork_key] = "0x%x" % activation_timestamp
         intent["chains"].append(intent_chain)
-
 
     plan.print(repr(intent))
     intent_json = json.encode(intent)
@@ -296,7 +291,6 @@ def deploy_contracts(
                 ),
             ]
         )
-
 
     plan.print(" && ".join(apply_cmds))
     plan.print("L1_RPC_URL:", str(l1_config_env_vars))

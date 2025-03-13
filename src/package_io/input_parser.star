@@ -204,16 +204,19 @@ def input_parser(plan, input_args, deployment_type):
                     isthmus_time_offset=result["network_params"]["isthmus_time_offset"],
                     interop_time_offset=result["network_params"]["interop_time_offset"],
                     fund_dev_accounts=result["network_params"]["fund_dev_accounts"],
-
                     withdrawal_delay=result["network_params"]["withdrawal_delay"],
-                    fee_withdrawal_network=result["network_params"]["fee_withdrawal_network"],
-                    dispute_game_finality_delay=result["network_params"]["dispute_game_finality_delay"],
+                    fee_withdrawal_network=result["network_params"][
+                        "fee_withdrawal_network"
+                    ],
+                    dispute_game_finality_delay=result["network_params"][
+                        "dispute_game_finality_delay"
+                    ],
                 ),
                 batcher_params=struct(
                     image=result["batcher_params"]["image"],
-                    private_key = result["batcher_params"]["private_key"],
-                    signer_endpoint = result["batcher_params"]["signer_endpoint"],
-                    signer_address = result["batcher_params"]["signer_address"],
+                    private_key=result["batcher_params"]["private_key"],
+                    signer_endpoint=result["batcher_params"]["signer_endpoint"],
+                    signer_address=result["batcher_params"]["signer_address"],
                     extra_params=result["batcher_params"]["extra_params"],
                 ),
                 challenger_params=struct(
@@ -244,7 +247,7 @@ def input_parser(plan, input_args, deployment_type):
                 ),
                 sequencer_params=struct(
                     image=result["sequencer_params"]["image"],
-                    private_key = result["sequencer_params"]["private_key"],
+                    private_key=result["sequencer_params"]["private_key"],
                     signer_endpoint=result["sequencer_params"]["signer_endpoint"],
                     signer_address=result["sequencer_params"]["signer_address"],
                     extra_params=result["sequencer_params"]["extra_params"],
@@ -258,14 +261,13 @@ def input_parser(plan, input_args, deployment_type):
                 system_config_owner_params=struct(
                     address=result["system_config_owner_params"]["address"]
                 ),
-                gas_params = struct(
-                    gas_limit = result["gas_params"]["gas_limit"],
-                    eip_1559_denominator = result["gas_params"]["eip_1559_denominator"],
-                    eip_1559_elasticity = result["gas_params"]["eip_1559_elasticity"],
-                    base_fee_scalar = result["gas_params"]["base_fee_scalar"],
-                    blob_base_fee_scalar = result["gas_params"]["blob_base_fee_scalar"]
+                gas_params=struct(
+                    gas_limit=result["gas_params"]["gas_limit"],
+                    eip_1559_denominator=result["gas_params"]["eip_1559_denominator"],
+                    eip_1559_elasticity=result["gas_params"]["eip_1559_elasticity"],
+                    base_fee_scalar=result["gas_params"]["base_fee_scalar"],
+                    blob_base_fee_scalar=result["gas_params"]["blob_base_fee_scalar"],
                 ),
-
                 mev_params=struct(
                     rollup_boost_image=result["mev_params"]["rollup_boost_image"],
                     builder_host=result["mev_params"]["builder_host"],
@@ -303,13 +305,19 @@ def input_parser(plan, input_args, deployment_type):
 def parse_network_params(plan, input_args, deployment_type):
     results = {}
 
-
     # configure deployment type
     results["deployment_type"] = deployment_type
-    
-    if results["deployment_type"] != "devnet" and results["deployment_type"] != "testnet":
-        fail("Invalid deployment type '{0}'. Must be 'devnet' or 'testnet'".format(results["deployment_type"]))
-    
+
+    if (
+        results["deployment_type"] != "devnet"
+        and results["deployment_type"] != "testnet"
+    ):
+        fail(
+            "Invalid deployment type '{0}'. Must be 'devnet' or 'testnet'".format(
+                results["deployment_type"]
+            )
+        )
+
     # configure observability
 
     results["observability"] = default_observability_params()
@@ -361,7 +369,7 @@ def parse_network_params(plan, input_args, deployment_type):
 
         sequencer_params = default_sequencer_params(deployment_type)
         sequencer_params.update(chain.get("sequencer_params", {}))
-  
+
         l1_proxy_admin_params = default_l1_proxy_admin_params()
         l1_proxy_admin_params.update(chain.get("l1_proxy_admin_params", {}))
 
@@ -492,18 +500,21 @@ def check_signer_params(role_params, role):
             fail(role + " cannot have a private key and a signer endpoint")
         if role_params.get("signer_address"):
             fail(role + " cannot have a private key and a signer address")
-    elif not role_params.get("signer_endpoint") and not role_params.get("signer_address"):
+    elif not role_params.get("signer_endpoint") and not role_params.get(
+        "signer_address"
+    ):
         fail(role + " must have a private key or a signer endpoint and address")
     else:
         if role_params.get("signer_endpoint") and not role_params.get("signer_address"):
             fail(role + " must have a signer address if it has a signer endpoint")
-        elif not role_params.get("signer_endpoint") and role_params.get("signer_address"):
+        elif not role_params.get("signer_endpoint") and role_params.get(
+            "signer_address"
+        ):
             fail(role + " must have a signer endpoint if it has a signer address")
 
 
-
 def default_optimism_args(deployment_type):
-    return{
+    return {
         "chains": default_chains(deployment_type),
         "op_contract_deployer_params": default_op_contract_deployer_params(),
         "global_log_level": "info",
@@ -615,22 +626,16 @@ def default_network_params():
     }
 
 
-
 def default_l1_proxy_admin_params():
-    return {
-        "address": "0x255fcBEC3d6984215a97389d83f03B608A8FA452"
-    }
+    return {"address": "0x255fcBEC3d6984215a97389d83f03B608A8FA452"}
 
 
 def default_l2_proxy_admin_params():
-    return {
-        "address": "0x255fcBEC3d6984215a97389d83f03B608A8FA452"
-    }
+    return {"address": "0x255fcBEC3d6984215a97389d83f03B608A8FA452"}
+
 
 def default_system_config_owner_params():
-    return {
-        "address": "0x255fcBEC3d6984215a97389d83f03B608A8FA452"
-    }
+    return {"address": "0x255fcBEC3d6984215a97389d83f03B608A8FA452"}
 
 
 def default_batcher_params(deployment_type):
@@ -642,8 +647,11 @@ def default_batcher_params(deployment_type):
         "signer_address": "",
     }
     if deployment_type == "testnet":
-        params["private_key"] = "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aef9"
+        params[
+            "private_key"
+        ] = "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aef9"
     return params
+
 
 def default_challenger_params(deployment_type):
     params = {
@@ -658,7 +666,9 @@ def default_challenger_params(deployment_type):
         "cannon_trace_types": ["cannon", "permissioned"],
     }
     if deployment_type == "testnet":
-        params["private_key"] = "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefb"
+        params[
+            "private_key"
+        ] = "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefb"
     return params
 
 
@@ -668,12 +678,14 @@ def default_proposer_params(deployment_type):
         "extra_params": [],
         "private_key": "",
         "signer_endpoint": "",
-        "signer_address": "", 
+        "signer_address": "",
         "game_type": 1,
         "proposal_interval": "10m",
     }
     if deployment_type == "testnet":
-        params["private_key"] = "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefc"
+        params[
+            "private_key"
+        ] = "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefc"
     return params
 
 
@@ -686,7 +698,9 @@ def default_sequencer_params(deployment_type):
         "signer_address": "",
     }
     if deployment_type == "testnet":
-        params["private_key"] = "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefd"
+        params[
+            "private_key"
+        ] = "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefd"
     return params
 
 
@@ -760,17 +774,18 @@ def default_op_contract_deployer_params():
         "global_deploy_overrides": default_op_contract_deployer_global_deploy_overrides(),
     }
 
+
 def default_ethereum_package_participants():
-    return{
-        "participants":
-        [
+    return {
+        "participants": [
             {
-            "el_type": "geth",
-            "cl_type": "teku",
-            "cl_image": "consensys/teku:latest-amd64"   
+                "el_type": "geth",
+                "cl_type": "teku",
+                "cl_image": "consensys/teku:latest-amd64",
             }
         ]
     }
+
 
 def default_ethereum_package_network_params():
     return {
@@ -799,8 +814,9 @@ def default_da_server_params():
         "cmd": DEFAULT_DA_SERVER_PARAMS["cmd"],
     }
 
+
 def default_gas_params():
-    return{
+    return {
         "gas_limit": "0x17D7840",
         "eip_1559_denominator": 50,
         "eip_1559_elasticity": 6,
