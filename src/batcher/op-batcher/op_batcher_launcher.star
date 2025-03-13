@@ -135,4 +135,4 @@ def get_batcher_config(
         ports=ports,
         cmd=cmd,
         private_ip_address_placeholder=ethereum_package_constants.PRIVATE_IP_ADDRESS_PLACEHOLDER,
-    ) 
+    )
