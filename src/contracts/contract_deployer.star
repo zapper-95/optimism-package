@@ -191,6 +191,13 @@ def deploy_contracts(
                     "l2GenesisBlockGasLimit": "0x17D7840",
                     "gasPriceOracleBaseFeeScalar": chain.gas_params.base_fee_scalar,
                     "gasPriceOracleBlobBaseFeeScalar": chain.gas_params.blob_base_fee_scalar,
+
+                    "proofMaturityDelaySeconds": chain.network_params.withdrawal_delay,
+                    "baseFeeVaultWithdrawalNetwork": chain.network_params.fee_withdrawal_network,
+                    "l1FeeVaultWithdrawalNetwork": chain.network_params.fee_withdrawal_network,
+                    "sequencerFeeVaultWithdrawalNetwork": chain.network_params.fee_withdrawal_network,
+                    "disputeGameFinalityDelaySeconds": chain.network_params.dispute_game_finality_delay,
+
                 },
                 "baseFeeVaultRecipient": read_chain_cmd(
                     "baseFeeVaultRecipient", chain_id
