@@ -204,8 +204,10 @@ def input_parser(plan, input_args, deployment_type):
                     isthmus_time_offset=result["network_params"]["isthmus_time_offset"],
                     interop_time_offset=result["network_params"]["interop_time_offset"],
                     fund_dev_accounts=result["network_params"]["fund_dev_accounts"],
-                    sequencer_fee_recipient=result["network_params"]["sequencer_fee_recipient"],
-                    sequencer_fee_receiver=result["network_params"]["sequencer_fee_receiver"],
+
+                    withdrawal_delay=result["network_params"]["withdrawal_delay"],
+                    fee_withdrawal_network=result["network_params"]["fee_withdrawal_network"],
+                    dispute_game_finality_delay=result["network_params"]["dispute_game_finality_delay"],
                 ),
                 batcher_params=struct(
                     image=result["batcher_params"]["image"],
@@ -607,8 +609,9 @@ def default_network_params():
         "isthmus_time_offset": None,
         "interop_time_offset": None,
         "fund_dev_accounts": True,
-        "sequencer_fee_recipient": "0x",
-        "sequencer_fee_receiver": "0x"
+        "withdrawal_delay": 604800,
+        "fee_withdrawal_network": 0,
+        "dispute_game_finality_delay": 302400,
     }
 
 

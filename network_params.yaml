@@ -35,8 +35,12 @@ optimism_package:
         fjord_time_offset: 0
         granite_time_offset: 0
         fund_dev_accounts: false
-        sequencer_fee_recipient: "0x255fcBEC3d6984215a97389d83f03B608A8FA452"
-        sequencer_fee_receiver: "0x255fcBEC3d6984215a97389d83f03B608A8FA452"
+
+        
+        withdrawal_delay: 604800 # should not be 0
+        fee_withdrawal_network: 0 # 0 or 1 for either l1 or l2
+        dispute_game_finality_delay: 302400 # should not be 0
+
       batcher_params:
         private_key: "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefa"
         #signer_address: '0xD0e9d614E8d5C5C3e7F09Dcb31CB3A7552deC836'
