@@ -46,6 +46,7 @@ def launch(
     batcher_params,
     observability_helper,
     da_server_context,
+    altda_deploy_config,
 ):
     batcher_service_name = "{0}".format(service_name)
 
@@ -60,6 +61,7 @@ def launch(
         batcher_params,
         observability_helper,
         da_server_context,
+        altda_deploy_config,
     )
 
     batcher_service = plan.add_service(service_name, config)
@@ -85,6 +87,7 @@ def get_batcher_config(
     batcher_params,
     observability_helper,
     da_server_context,
+    altda_deploy_config,
 ):
     ports = dict(get_used_ports())
 
@@ -100,17 +103,19 @@ def get_batcher_config(
         "--rpc.addr=0.0.0.0",
         "--rpc.port=" + str(BATCHER_HTTP_PORT_NUM),
         "--rpc.enable-admin",
-        "--max-channel-duration=1",
+        "--max-channel-duration="
+        + str(altda_deploy_config.da_batch_submission_frequency),
         "--l1-eth-rpc=" + l1_config_env_vars["L1_RPC_URL"],
-        # da commitments currently have to be sent as calldata to the batcher inbox
-        "--data-availability-type="
-        + ("calldata" if da_server_context.enabled else "blobs"),
         "--altda.enabled=" + str(da_server_context.enabled),
         "--altda.da-server=" + da_server_context.http_url,
         # This flag is very badly named, but is needed in order to let the da-server compute the commitment.
         # This leads to sending POST requests to /put instead of /put/<keccak256(data)>
-        "--altda.da-service",
+        "--altda.da-service=" + str(da_server_context.enabled),
     ]
+
+    # only add data avaliability type if altda disabled
+    if not da_server_context.enabled:
+        cmd.append("--data-availability-type=" + str(altda_deploy_config.da_type))
 
     plan.print("Batcher params: " + str(batcher_params))
     plan.print(batcher_params.signer_endpoint)
