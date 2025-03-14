@@ -35,12 +35,9 @@ optimism_package:
         fjord_time_offset: 0
         granite_time_offset: 0
         fund_dev_accounts: false
-
-        
         withdrawal_delay: 604800 # should not be 0
         fee_withdrawal_network: 0 # 0 or 1 for either l1 or l2
         dispute_game_finality_delay: 302400 # should not be 0
-
       batcher_params:
         private_key: "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefa"
         #signer_address: '0xD0e9d614E8d5C5C3e7F09Dcb31CB3A7552deC836'
@@ -71,7 +68,12 @@ optimism_package:
       mev_params:
         builder_host: ""
         builder_port: ""
-      additional_services: []
+      additional_services: ["da_server"]
+
+      da_server_params:
+        # only if custom da_type selected in altda_deploy_config
+        server_endpoint: "https://celestia-mocha-rpc.publicnode.com:443"
+
   op_contract_deployer_params:
     image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-deployer:v0.0.12
     l1_artifacts_locator: https://storage.googleapis.com/oplabs-contract-artifacts/artifacts-v1-fffcbb0ebf7f83311791534a41e65ef90df47797f9ca8f86941452f597f7128c.tar.gz
@@ -80,6 +82,31 @@ optimism_package:
   global_node_selectors: {}
   global_tolerations: []
   persistent: false
+
+  altda_deploy_config:
+    use_altda: true
+    # TODO: Is this field redundant? Afaiu setting it to GenericCommitment will not deploy the
+    # DAChallengeContract, and hence is equivalent to setting use_altda to false.
+    # Furthermore, altda rollups using generic commitments might anyways need to support failing over
+    # to keccak commitments if the altda layer is down.
+
+    #da_provider: # not sure what this is from the docs https://docs.optimism.io/operators/chain-operators/configuration/rollup#gaspriceoraclebasefeescalar
+    
+    da_type: "" # auto, blobs, calldata or CUSTOM sets --data-availability-type in batcher_launcher
+    da_batch_submission_frequency: 1 #--max-channel-duration=1 in block units but user input in minutes
+
+
+    # below only if custom da selected
+    da_commitment_type: KeccakCommitment # select either generic or Keccack
+    
+    # if select generic ask for da challenge contract address
+    da_challenge_contract_address: "0x49cce536156dC6E5F05B26eaA8a2607Cb943e041"
+
+    da_challenge_window: 100
+    da_resolve_window: 100
+    da_bond_size: 10000
+    da_resolver_refund_percentage: 0
+
 external_l1_network_params:
   network_id: "3151908"
   rpc_kind: standard
