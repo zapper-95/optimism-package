@@ -106,13 +106,13 @@ optimism_package:
     da_bond_size: 10000
     da_resolver_refund_percentage: 0
 
-external_l1_network_params:
-  network_id: "3151908"
-  rpc_kind: standard
-  el_rpc_url: http://el-1-geth-teku:8545 
-  el_ws_url: ws://el-1-geth-teku:8546 
-  cl_rpc_url: http://cl-1-teku-geth:4000 
-  priv_key: "0xbcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31"
+# external_l1_network_params:
+#   network_id: "3151908"
+#   rpc_kind: standard
+#   el_rpc_url: http://el-1-geth-teku:8545 
+#   el_ws_url: ws://el-1-geth-teku:8546 
+#   cl_rpc_url: http://cl-1-teku-geth:4000 
+#   priv_key: "0xbcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31"
 
 # external_l1_network_params:
 #   network_id: "11155111"
@@ -122,21 +122,21 @@ external_l1_network_params:
 #   cl_rpc_url: https://omniscient-sparkling-model.ethereum-sepolia.quiknode.pro/0650b5f675a2d17b00c8aa2a29dadc3e46f7fdbb/
 #   priv_key: "0xbcdf20249abf0ed6d944c0288fad489e33f66b3960d9e6229c1cd214ed3bbe31"
 
-# ethereum_package:
-#   participants:
-#   - el_type: geth
-#     cl_type: teku
-#     cl_image: "consensys/teku:latest-amd64" # add this https://github.com/rancher-sandbox/rancher-desktop/issues/8057
-#   network_params:
-#     preset: minimal
-#     genesis_delay: 5
-#     additional_preloaded_contracts: '
-#       {
-#         "0x4e59b44847b379578588920cA78FbF26c0B4956C": {
-#           "balance": "0ETH",
-#           "code": "0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3",
-#           "storage": {},
-#           "nonce": "1"
-#         }
-#       }
-#     '
+ethereum_package:
+  participants:
+  - el_type: geth
+    cl_type: teku
+    cl_image: "consensys/teku:latest-amd64" # add this https://github.com/rancher-sandbox/rancher-desktop/issues/8057
+  network_params:
+    preset: minimal
+    genesis_delay: 5
+    additional_preloaded_contracts: '
+      {
+        "0x4e59b44847b379578588920cA78FbF26c0B4956C": {
+          "balance": "0ETH",
+          "code": "0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3",
+          "storage": {},
+          "nonce": "1"
+        }
+      }
+    '
