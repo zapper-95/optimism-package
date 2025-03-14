@@ -41,6 +41,9 @@ ALTDA_DEPLOY_CONFIG_PARAMS = [
     "da_resolve_window",
     "da_bond_size",
     "da_resolver_refund_percentage",
+    "da_type",
+    "da_batch_submission_frequency",
+    "da_challenge_contract_address",
 ]
 
 PARTICIPANT_CATEGORIES = {
@@ -166,8 +169,7 @@ SUBCATEGORY_PARAMS = {
     "mev_params": ["rollup_boost_image", "builder_host", "builder_port"],
     "da_server_params": [
         "enabled",
-        "image",
-        "cmd",
+        "server_endpoint",
     ],
 }
 
