@@ -63,7 +63,7 @@ def external_l1_network_params_input_parser(plan, input_args):
     )
 
 
-def input_parser(plan, input_args, deployment_type):
+def input_parser(plan, input_args, deployment_type="devnet"):
     sanity_check.sanity_check(plan, input_args)
     results = parse_network_params(plan, input_args, deployment_type)
     plan.print(results)
