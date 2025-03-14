@@ -560,11 +560,14 @@ def default_interop_params():
 def default_altda_deploy_config():
     return {
         "use_altda": False,
+        "da_type": "blobs",
         "da_commitment_type": "KeccakCommitment",
         "da_challenge_window": 100,
         "da_resolve_window": 100,
         "da_bond_size": 0,
         "da_resolver_refund_percentage": 0,
+        "da_batch_submission_frequency": 1,
+        "da_challenge_contract_address": "",
     }
 
 
