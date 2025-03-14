@@ -233,9 +233,15 @@ def deploy_contracts(
                     "daChallengeWindow": altda_args.da_challenge_window,
                     "daResolveWindow": altda_args.da_resolve_window,
                     "daBondSize": altda_args.da_bond_size,
+                    "daResolverRefundPercentage": altda_args.da_resolver_refund_percentage,
                 },
             }
         )
+        if altda_args.da_type == "custom":
+            intent_chain["dangerousAltDAConfig"][
+                "daChallengeProxy"
+            ] = altda_args.da_challenge_contract_address
+
         for index, fork_key, activation_timestamp in hardfork_schedule:
             intent_chain["deployOverrides"][fork_key] = "0x%x" % activation_timestamp
         intent["chains"].append(intent_chain)
@@ -313,10 +319,14 @@ def deploy_contracts(
     )
 
     files = {"/network-data": op_deployer_output.files_artifacts[0]}
+    run = ""
     if devnet:
         files["/fund-script"] = fund_script_artifact
+        run = 'jq --from-file /fund-script/gen2spec.jq < "/network-data/genesis-$CHAIN_ID.json" > "/network-data/chainspec-$CHAIN_ID.json"'
     else:
         files["/collect-script"] = collect_script_artifact
+        run = 'jq --from-file /collect-script/gen2spec.jq < "/network-data/genesis-$CHAIN_ID.json" > "/network-data/chainspec-$CHAIN_ID.json"'
+
     for chain in optimism_args.chains:
         plan.run_sh(
             name="op-deployer-generate-chainspec",
@@ -330,7 +340,7 @@ def deploy_contracts(
                 )
             ],
             files=files,
-            run='jq --from-file /fund-script/gen2spec.jq < "/network-data/genesis-$CHAIN_ID.json" > "/network-data/chainspec-$CHAIN_ID.json"',
+            run=run,
         )
 
     return op_deployer_output.files_artifacts[0]
