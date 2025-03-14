@@ -30,6 +30,7 @@ def launch_participant_network(
     observability_helper,
     interop_params,
     da_server_context,
+    altda_deploy_config,
 ):
     num_participants = len(participants)
     # First EL and sequencer CL
@@ -92,6 +93,7 @@ def launch_participant_network(
         batcher_params,
         observability_helper,
         da_server_context,
+        altda_deploy_config,
     )
 
     game_factory_address = util.read_network_config_value(

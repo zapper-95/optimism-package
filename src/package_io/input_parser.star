@@ -43,18 +43,8 @@ DEFAULT_SIDECAR_IMAGES = {
 }
 
 DEFAULT_DA_SERVER_PARAMS = {
-    "image": "us-docker.pkg.dev/oplabs-tools-artifacts/images/da-server:latest",
-    "cmd": [
-        "da-server",  # uses keccak commitments by default
-        # We use the file storage backend instead of s3 for simplicity.
-        # Blobs and commitments are stored in the /home directory (which already exists).
-        # Note that this storage is ephemeral because we aren't mounting an external kurtosis file.
-        # This means that the data is lost when the container is deleted.
-        "--file.path=/home",
-        "--addr=0.0.0.0",
-        "--port=3100",
-        "--log.level=debug",
-    ],
+    "enabled": False,
+    "server_endpoint": "",
 }
 
 
@@ -127,6 +117,13 @@ def input_parser(plan, input_args, deployment_type):
             da_bond_size=results["altda_deploy_config"]["da_bond_size"],
             da_resolver_refund_percentage=results["altda_deploy_config"][
                 "da_resolver_refund_percentage"
+            ],
+            da_type=results["altda_deploy_config"]["da_type"],
+            da_batch_submission_frequency=results["altda_deploy_config"][
+                "da_batch_submission_frequency"
+            ],
+            da_challenge_contract_address=results["altda_deploy_config"][
+                "da_challenge_contract_address"
             ],
         ),
         chains=[
@@ -275,8 +272,7 @@ def input_parser(plan, input_args, deployment_type):
                 ),
                 da_server_params=struct(
                     enabled=result["da_server_params"]["enabled"],
-                    image=result["da_server_params"]["image"],
-                    cmd=result["da_server_params"]["cmd"],
+                    server_endpoint=result["da_server_params"]["server_endpoint"],
                 ),
                 additional_services=result["additional_services"],
             )
@@ -564,11 +560,14 @@ def default_interop_params():
 def default_altda_deploy_config():
     return {
         "use_altda": False,
+        "da_type": "blobs",
         "da_commitment_type": "KeccakCommitment",
         "da_challenge_window": 100,
         "da_resolve_window": 100,
         "da_bond_size": 0,
         "da_resolver_refund_percentage": 0,
+        "da_batch_submission_frequency": 1,
+        "da_challenge_contract_address": "",
     }
 
 
@@ -810,8 +809,7 @@ def default_ethereum_package_network_params():
 def default_da_server_params():
     return {
         "enabled": False,
-        "image": DEFAULT_DA_SERVER_PARAMS["image"],
-        "cmd": DEFAULT_DA_SERVER_PARAMS["cmd"],
+        "server_endpoint": "",
     }
 
 
