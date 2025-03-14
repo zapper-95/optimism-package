@@ -189,7 +189,6 @@ ADDITIONAL_SERVICES_PARAMS = [
 ]
 
 ROOT_PARAMS = [
-    "deployment_type",
     "observability",
     "interop",
     "altda_deploy_config",
