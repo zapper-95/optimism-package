@@ -1,5 +1,4 @@
 optimism_package:
-  deployment_type: "testnet"
   chains:
     - participants:
       - el_type: op-geth
