@@ -136,6 +136,7 @@ def run(plan, args):
                 persistent,
                 observability_helper,
                 interop_params,
+                altda_deploy_config,
             )
         )
 

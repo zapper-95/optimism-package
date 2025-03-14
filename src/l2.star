@@ -22,6 +22,7 @@ def launch_l2(
     persistent,
     observability_helper,
     interop_params,
+    altda_deploy_config,
 ):
     network_params = l2_args.network_params
     batcher_params = l2_args.batcher_params
@@ -35,15 +36,13 @@ def launch_l2(
     # because op-batcher and op-node(s) need to know the da-server url, if present
     da_server_context = da_server_launcher.disabled_da_server_context()
     if "da_server" in l2_args.additional_services:
-        da_server_image = l2_args.da_server_params.image
-        plan.print("Launching da-server")
-        da_server_context = da_server_launcher.launch_da_server(
+        plan.print("Adding da-server endpoint")
+        da_server_context = da_server_launcher.get_enabled_da_server_context(
             plan,
             "da-server-{0}".format(l2_services_suffix),
-            da_server_image,
-            l2_args.da_server_params.cmd,
+            l2_args.da_server_params.server_endpoint,
         )
-        plan.print("Successfully launched da-server")
+        plan.print("Successfully added da-server endpoint")
 
     l2 = participant_network.launch_participant_network(
         plan,
@@ -66,6 +65,7 @@ def launch_l2(
         observability_helper,
         interop_params,
         da_server_context,
+        altda_deploy_config,
     )
 
     all_el_contexts = []
