@@ -5,7 +5,6 @@ set -euo pipefail
 export ETH_RPC_URL="$L1_RPC_URL"
 
 deployer_addr=$(cast wallet address "$DEPLOYER_PRIVATE_KEY")
-mnemonic="test test test test test test test test test test test junk"
 
 roles=("l2ProxyAdmin" "l1ProxyAdmin" "baseFeeVaultRecipient" "l1FeeVaultRecipient" "sequencerFeeVaultRecipient" "systemConfigOwner")
 funded_roles=("proposer" "batcher" "sequencer" "challenger")
