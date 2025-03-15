@@ -251,7 +251,14 @@ def get_beacon_config(
         )
 
     if sequencer_enabled:
-        if not sequencer_params.private_key:
+        sequencer_private_key = util.read_network_config_value(
+            plan,
+            launcher.deployment_output,
+            "sequencer-{0}".format(launcher.network_params.network_id),
+            ".privateKey",
+        )
+
+        if sequencer_params.signer_address:
             env_vars.update(
                 {
                     "OP_NODE_SIGNER_ADDRESS": str(sequencer_params.signer_address),
@@ -260,7 +267,7 @@ def get_beacon_config(
                 }
             )
         else:
-            cmd += ["--p2p.sequencer.key=" + sequencer_params.private_key]
+            cmd += ["--p2p.sequencer.key=" + sequencer_private_key]
 
         cmd += [
             "--sequencer.enabled",

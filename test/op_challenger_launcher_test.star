@@ -92,6 +92,6 @@ def test_launch_with_defaults(plan):
     expect.eq(
         challenger_service_config.cmd,
         [
-            "mkdir -p /data/op-challenger/op-challenger-data && op-challenger --cannon-l2-genesis=/network-configs/genesis-2151908.json --cannon-rollup-config=/network-configs/rollup-2151908.json --game-factory-address=challenger_private_key --datadir=/data/op-challenger/op-challenger-data --l1-beacon=CL_RPC_URL --l1-eth-rpc=L1_RPC_URL --l2-eth-rpc=rpc_http_url --private-key=challenger_private_key --rollup-rpc=beacon_http_url --trace-type=cannon,permissioned --metrics.enabled --metrics.addr=0.0.0.0 --metrics.port=9001 --cannon-prestates-url=https://storage.googleapis.com/oplabs-network-data/proofs/op-program/cannon"
+            "mkdir -p /data/op-challenger/op-challenger-data && op-challenger --cannon-l2-genesis=/network-configs/genesis-2151908.json --cannon-rollup-config=/network-configs/rollup-2151908.json --game-factory-address=challenger_private_key --datadir=/data/op-challenger/op-challenger-data --l1-beacon=CL_RPC_URL --l1-eth-rpc=L1_RPC_URL --l2-eth-rpc=rpc_http_url --rollup-rpc=beacon_http_url --trace-type=cannon,permissioned --private-key=challenger_private_key --metrics.enabled --metrics.addr=0.0.0.0 --metrics.port=9001 --cannon-prestates-url=https://storage.googleapis.com/oplabs-network-data/proofs/op-program/cannon"
         ],
     )

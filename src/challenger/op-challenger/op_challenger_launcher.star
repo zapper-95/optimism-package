@@ -113,7 +113,7 @@ def get_challenger_config(
         "--trace-type=" + ",".join(challenger_params.cannon_trace_types),
     ]
 
-    if challenger_params.private_key:
+    if not challenger_params.signer_address:
         cmd.append("--private-key=" + challenger_key)
     else:
         cmd.append("--signer.endpoint=" + str(challenger_params.signer_endpoint))

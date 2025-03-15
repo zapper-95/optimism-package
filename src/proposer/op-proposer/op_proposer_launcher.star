@@ -100,8 +100,8 @@ def get_proposer_config(
         "--wait-node-sync=true",
     ]
 
-    if proposer_params.private_key:
-        cmd.append("--private-key=" + proposer_params.private_key)
+    if not proposer_params.signer_address:
+        cmd.append("--private-key=" + gs_proposer_private_key)
     else:
         cmd.append("--signer.endpoint=" + str(proposer_params.signer_endpoint))
         cmd.append("--signer.address=" + str(proposer_params.signer_address))
