@@ -120,9 +120,6 @@ def get_batcher_config(
     plan.print("Batcher params: " + str(batcher_params))
     plan.print(batcher_params.signer_endpoint)
     plan.print(batcher_params.signer_address)
-
-    # cmd.append("--private-key=" + gs_batcher_private_key)
-
     if batcher_params.private_key:
         cmd.append("--private-key=" + gs_batcher_private_key)
     else:

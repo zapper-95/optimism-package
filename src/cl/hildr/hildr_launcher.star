@@ -79,6 +79,7 @@ def launch(
     observability_helper,
     interop_params,
     da_server_context,
+    sequencer_params,
 ):
     # beacon_node_identity_recipe = PostHttpRequestRecipe(
     #     endpoint="/",
@@ -111,6 +112,7 @@ def launch(
         sequencer_enabled,
         observability_helper,
         da_server_context,
+        sequencer_params,
     )
 
     beacon_service = plan.add_service(service_name, config)
@@ -158,6 +160,7 @@ def get_beacon_config(
     sequencer_enabled,
     observability_helper,
     da_server_context,
+    sequencer_params,
 ):
     EXECUTION_ENGINE_ENDPOINT = "http://{0}:{1}".format(
         el_context.ip_addr,
@@ -223,6 +226,7 @@ def get_beacon_config(
         observability.expose_metrics_port(ports)
 
     if sequencer_enabled:
+        # this value is never used so why is it set?????
         sequencer_private_key = util.read_network_config_value(
             plan,
             launcher.deployment_output,
@@ -279,9 +283,10 @@ def get_beacon_config(
     return ServiceConfig(**config_args)
 
 
-def new_hildr_launcher(deployment_output, jwt_file, network_params):
+def new_hildr_launcher(deployment_output, jwt_file, network_params, sequencer_params):
     return struct(
         deployment_output=deployment_output,
         jwt_file=jwt_file,
         network_params=network_params,
+        sequencer_params=sequencer_params,
     )

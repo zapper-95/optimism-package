@@ -45,6 +45,7 @@ def launch(
     observability_helper,
     interop_params,
     da_server_context,
+    sequencer_params,
 ):
     el_launchers = {
         "op-geth": {
@@ -118,13 +119,13 @@ def launch(
     cl_launchers = {
         "op-node": {
             "launcher": op_node.new_op_node_launcher(
-                deployment_output, jwt_file, network_params
+                deployment_output, jwt_file, network_params, sequencer_params
             ),
             "launch_method": op_node.launch,
         },
         "hildr": {
             "launcher": hildr.new_hildr_launcher(
-                deployment_output, jwt_file, network_params
+                deployment_output, jwt_file, network_params, sequencer_params
             ),
             "launch_method": hildr.launch,
         },
@@ -133,7 +134,7 @@ def launch(
     cl_builder_launchers = {
         "op-node": {
             "launcher": op_node_builder.new_op_node_builder_launcher(
-                deployment_output, jwt_file, network_params
+                deployment_output, jwt_file, network_params, sequencer_params
             ),
             "launch_method": op_node_builder.launch,
         },
@@ -354,6 +355,7 @@ def launch(
             observability_helper,
             interop_params,
             da_server_context,
+            sequencer_params,
         )
 
         # We need to make sure that el_context and cl_context are first in the list, as down the line all_el_contexts[0]

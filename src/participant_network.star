@@ -17,6 +17,7 @@ def launch_participant_network(
     batcher_params,
     challenger_params,
     proposer_params,
+    sequencer_params,
     mev_params,
     deployment_output,
     l1_config_env_vars,
@@ -52,6 +53,7 @@ def launch_participant_network(
         observability_helper,
         interop_params,
         da_server_context,
+        sequencer_params,
     )
 
     all_participants = []

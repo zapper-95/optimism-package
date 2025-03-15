@@ -28,6 +28,7 @@ def launch_l2(
     batcher_params = l2_args.batcher_params
     challenger_params = l2_args.challenger_params
     proposer_params = l2_args.proposer_params
+    sequencer_params = l2_args.sequencer_params
     mev_params = l2_args.mev_params
 
     plan.print("Deploying L2 with name {0}".format(network_params.name))
@@ -52,6 +53,7 @@ def launch_l2(
         batcher_params,
         challenger_params,
         proposer_params,
+        sequencer_params,
         mev_params,
         deployment_output,
         l1_config,

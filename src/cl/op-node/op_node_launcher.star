@@ -78,6 +78,7 @@ def launch(
     observability_helper,
     interop_params,
     da_server_context,
+    sequencer_params,
 ):
     beacon_node_identity_recipe = PostHttpRequestRecipe(
         endpoint="/",
@@ -112,6 +113,7 @@ def launch(
         observability_helper,
         interop_params,
         da_server_context,
+        sequencer_params,
     )
 
     beacon_service = plan.add_service(service_name, config)
@@ -161,6 +163,7 @@ def get_beacon_config(
     observability_helper,
     interop_params,
     da_server_context,
+    sequencer_params,
 ):
     ports = dict(get_used_ports(BEACON_DISCOVERY_PORT_NUM))
 
@@ -248,15 +251,18 @@ def get_beacon_config(
         )
 
     if sequencer_enabled:
-        sequencer_private_key = util.read_network_config_value(
-            plan,
-            launcher.deployment_output,
-            "sequencer-{0}".format(launcher.network_params.network_id),
-            ".privateKey",
-        )
+        if not sequencer_params.private_key:
+            env_vars.update(
+                {
+                    "OP_NODE_SIGNER_ADDRESS": str(sequencer_params.signer_address),
+                    "OP_NODE_SIGNER_ENDPOINT": str(sequencer_params.signer_endpoint),
+                    "OP_NODE_SIGNER_TLS_ENABLED": "false",
+                }
+            )
+        else:
+            cmd += ["--p2p.sequencer.key=" + sequencer_params.private_key]
 
         cmd += [
-            "--p2p.sequencer.key=" + sequencer_private_key,
             "--sequencer.enabled",
             "--sequencer.l1-confs=2",
         ]
@@ -315,9 +321,10 @@ def get_beacon_config(
     return ServiceConfig(**config_args)
 
 
-def new_op_node_launcher(deployment_output, jwt_file, network_params):
+def new_op_node_launcher(deployment_output, jwt_file, network_params, sequencer_params):
     return struct(
         deployment_output=deployment_output,
         jwt_file=jwt_file,
         network_params=network_params,
+        sequencer_params=sequencer_params,
     )
