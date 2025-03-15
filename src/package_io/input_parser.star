@@ -43,7 +43,6 @@ DEFAULT_SIDECAR_IMAGES = {
 }
 
 DEFAULT_DA_SERVER_PARAMS = {
-    "enabled": False,
     "server_endpoint": "",
 }
 
@@ -271,7 +270,6 @@ def input_parser(plan, input_args, deployment_type="devnet"):
                     builder_port=result["mev_params"]["builder_port"],
                 ),
                 da_server_params=struct(
-                    enabled=result["da_server_params"]["enabled"],
                     server_endpoint=result["da_server_params"]["server_endpoint"],
                 ),
                 additional_services=result["additional_services"],
@@ -792,7 +790,6 @@ def default_ethereum_package_network_params():
 
 def default_da_server_params():
     return {
-        "enabled": False,
         "server_endpoint": "",
     }
 
