@@ -35,7 +35,7 @@ We introduce customisation for private keys and signer information (address and 
 |-----------------------------|--------------------------------------------|
 | Block gas limit             | `chain.gas_params.gas_limit`               |
 | EIP 1559 Elasticity         | `chain.gas_params.eip1559Elasticity`       |
-| EIP 1559 Denominator        | `chain.gas_params.denominator`            |
+| EIP 1559 Denominator        | `chain.gas_params.eip_1559_denominator`   |
 | Base Fee Scalar            | `chain.gas_params.base_fee_scalar`         |
 | Blob Base Fee Scalar       | `chain.gas_params.blob_base_fee_scalar`    |
 
