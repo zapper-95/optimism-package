@@ -121,14 +121,14 @@ def get_batcher_config(
     plan.print(batcher_params.signer_endpoint)
     plan.print(batcher_params.signer_address)
 
-    cmd.append("--private-key=" + gs_batcher_private_key)
+    # cmd.append("--private-key=" + gs_batcher_private_key)
 
-    # if batcher_params.private_key:
-    #     cmd.append("--private-key=" + gs_batcher_private_key)
-    # else:
-    #     cmd.append("--signer.endpoint=" + str(batcher_params.signer_endpoint))
-    #     cmd.append("--signer.address=" + str(batcher_params.signer_address))
-    #     cmd.append("--signer.tls.enabled=false")
+    if batcher_params.private_key:
+        cmd.append("--private-key=" + gs_batcher_private_key)
+    else:
+        cmd.append("--signer.endpoint=" + str(batcher_params.signer_endpoint))
+        cmd.append("--signer.address=" + str(batcher_params.signer_address))
+        cmd.append("--signer.tls.enabled=false")
 
     if observability_helper.enabled:
         observability.configure_op_service_metrics(cmd, ports)
