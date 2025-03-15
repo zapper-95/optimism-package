@@ -1,37 +1,54 @@
-# Welcome to Optimism Package
+# UpRoll Optimism Package
+This is a fork of the optimism package built to allow more chain configurations. Its intended purpose is to give [UpRoll CLI](https://github.com/zapper-95/UpRoll-cli.git) greater control over deployed rollups.
 
-The default package for Optimism. The kurtosis package uses [op-deployer](https://github.com/ethereum-optimism/optimism/tree/develop/op-deployer) to manage
-the L2 chains and all associated artifacts such as contract deployments.
+## New Configurations
+### Signer Information
+In the upstream package, privates keys are determined by the mnemonic `test test test test test test test test test test test junk` and cannot be customised.
 
-```yaml
-optimism_package:
-  chains:
-    - participants:
-        - el_type: op-geth
-          cl_type: op-node
-        - el_type: op-reth
-        - el_type: op-erigon
-        - el_type: op-nethermind
-ethereum_package:
-  network_params:
-    preset: minimal
-    genesis_delay: 5
-    additional_preloaded_contracts: '
-      {
-        "0x4e59b44847b379578588920cA78FbF26c0B4956C": {
-          "balance": "0ETH",
-          "code": "0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe03601600081602082378035828234f58015156039578182fd5b8082525050506014600cf3",
-          "storage": {},
-          "nonce": "1"
-        }
-      }
-    '
+We introduce customisation for private keys and signer information (address and endpoint) for each privallaged role.
 
-```
 
-Please note, by default your network will be running a `minimal` preset Ethereum network. Click [here](https://github.com/ethereum/consensus-specs/blob/dev/configs/minimal.yaml) to learn more about minimal preset. You can [customize](https://github.com/ethpandaops/ethereum-package) the L1 Ethereum network by modifying the `ethereum_package` configuration.
+| Role       | Parameter       | Path                                    |
+|------------|---------------|-----------------------------------------|
+| **Batcher**    | private_key    | `chain.batcher_params.private_key`    |
+|            | signer_endpoint | `chain.batcher_params.signer_endpoint` |
+|            | signer_address  | `chain.batcher_params.signer_address`  |
+| **Sequencer**  | private_key    | `chain.sequencer_params.private_key`  |
+|            | signer_endpoint | `chain.sequencer_params.signer_endpoint` |
+|            | signer_address  | `chain.sequencer_params.signer_address`  |
+| **Proposer**   | private_key    | `chain.proposer_params.private_key`   |
+|            | signer_endpoint | `chain.proposer_params.signer_endpoint` |
+|            | signer_address  | `chain.proposer_params.signer_address`  |
+| **Challenger** | private_key    | `chain.challenger_params.private_key` |
+|            | signer_endpoint | `chain.challenger_params.signer_endpoint` |
+|            | signer_address  | `chain.challenger_params.signer_address` |
 
-You can also completely remove `ethereum_package` from your configuration in which case it will default to a `minimal` preset Ethereum network.
+### Network Parameters
+| Parameter                         | Path                                              |
+|---------------------------------|---------------------------------------------------|
+| Withdrawal delay              | `chain.network_params.withdrawal_delay`          |
+| Fee withdrawal network          | `chain.network_params.fee_withdrawal_network`    |
+| Dispute game finality delay     | `chain.network_params.dispute_game_finality_delay` |
+
+### Gas Parameters
+| Parameter                   | Path                                       |
+|-----------------------------|--------------------------------------------|
+| Block gas limit             | `chain.gas_params.gas_limit`               |
+| EIP 1559 Elasticity         | `chain.gas_params.eip1559Elasticity`       |
+| EIP 1559 Denominator        | `chain.gas_params.denominator`            |
+| Base Fee Scalar            | `chain.gas_params.base_fee_scalar`         |
+| Blob Base Fee Scalar       | `chain.gas_params.blob_base_fee_scalar`    |
+
+
+### Data Availibility
+| Parameter                         | Path                                                           |
+|-----------------------------------|----------------------------------------------------------------|
+| Data availability type           | `optimism_package.altda_deploy_config.da_type`                 |
+| Batch submissions frequency      | `optimism_package.altda_deploy_config.da_batch_submission_frequency` |
+| DA server endpoint               | `chain.da_server_params.server_endpoint`                      |
+| DA Challenge Contract Address    | `optimism_package.altda_deploy_config.da_challenge_contract_address` |
+
+
 
 ## Quickstart
 
@@ -138,14 +155,17 @@ optimism_package:
   #    - For altda chains, set da_server_params to use an image and cmd of your choice (one could use da-server, another eigenda-proxy, another celestia proxy, etc). If unset, op's default da-server image will be used.
   altda_deploy_config:
     use_altda: false
-    # TODO: Is this field redundant? Afaiu setting it to GenericCommitment will not deploy the
-    # DAChallengeContract, and hence is equivalent to setting use_altda to false.
-    # Furthermore, altda rollups using generic commitments might anyways need to support failing over
-    # to keccak commitments if the altda layer is down.
+    da_type: "calldata" # allows auto, blobs, calldata or custom. Sets --data-availability-type in batcher_launcher
+
+    da_batch_submission_frequency: 1 #--max-channel-duration=1 in block units but user input in minutes
+
+    da_challenge_contract_address: "0x49cce536156dC6E5F05B26eaA8a2607Cb943e041"
+
+
     da_commitment_type: KeccakCommitment
     da_challenge_window: 100
     da_resolve_window: 100
-    da_bond_size: 0
+    da_bond_size: 1000
     da_resolver_refund_percentage: 0
 
   # An array of L2 networks to run
@@ -370,6 +390,15 @@ optimism_package:
         # The Docker image that should be used for the batcher; leave blank to use the default op-batcher image
         image: ""
 
+
+        # If using a testnet, use either a private key or signer information (signer_endpoint and signer_address), but not both
+        private_key: ""  
+        signer_endpoint: "" # endpoint of the signer
+        signer_address: "" # wallet address of the signer
+
+        signer_endpoint ""
+
+
         # A list of optional extra params that will be passed to the batcher container for modifying its behaviour
         extra_params: []
 
@@ -380,6 +409,12 @@ optimism_package:
 
         # The Docker image that should be used for the challenger; leave blank to use the default op-challenger image
         image: ""
+
+
+        # If using a testnet, use either a private key or signer information (signer_endpoint and signer_address), but not both
+        private_key: ""  
+        signer_endpoint: "" # endpoint of the signer
+        signer_address: "" # wallet address of the signer
 
         # A list of optional extra params that will be passed to the challenger container for modifying its behaviour
         extra_params: []
@@ -395,6 +430,11 @@ optimism_package:
         # The Docker image that should be used for the proposer; leave blank to use the default op-proposer image
         image: ""
 
+        # If using a testnet, use either a private key or signer information (signer_endpoint and signer_address), but not both
+        private_key: ""  
+        signer_endpoint: "" # endpoint of the signer
+        signer_address: "" # wallet address of the signer
+
         # A list of optional extra params that will be passed to the proposer container for modifying its behaviour
         extra_params: []
 
@@ -404,6 +444,19 @@ optimism_package:
         # Interval between submitting L2 output proposals
         proposal_internal: 10m
 
+      sequencer_params:
+        # If using a testnet, use either a private key or signer information (signer_endpoint and signer_address), but not both
+        private_key: ""  
+        signer_endpoint: "" # endpoint of the signer
+        signer_address: "" # wallet address of the signer
+      
+      gas_params:
+        gas_limit: "0x17D7840"
+        eip_1559_elasticity: 6
+        eip_1559_denominator: 50
+        base_fee_scalar: 2
+        blob_base_fee_scalar: 1
+  
       # Default MEV configuration
       mev_params:
         # The Docker image that should be used for rollup boost; leave blank to use the default rollup-boost image
@@ -427,18 +480,8 @@ optimism_package:
       # Configuration for da-server - https://specs.optimism.io/experimental/alt-da.html#da-server
       # TODO: each op-node and op-batcher should potentially have their own da-server, instead of sharing one like we currently do. For eg batcher needs to write via its da-server, whereas op-nodes don't.
       da_server_params:
-        image: us-docker.pkg.dev/oplabs-tools-artifacts/images/da-server:latest
-        # Command to pass to the container.
-        # This is kept maximally generic to allow for any possible configuration, given that different
-        # da layer da-servers might have completely different flags.
-        # The below arguments are also the default, so can be omitted, and will work as long as the image
-        # is the da-server above (which is also the default, so can also be omitted).
-        cmd:
-          - "da-server"
-          - "--file.path=/home"
-          - "--addr=0.0.0.0"
-          - "--port=3100"
-          - "--log.level=debug"
+        # include your custom da server endpoint
+        server_endpoint: ""
 
   # L2 contract deployer configuration - used for all L2 networks
   # The docker image that should be used for the L2 contract deployer

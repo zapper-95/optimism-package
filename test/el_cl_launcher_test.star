@@ -39,7 +39,7 @@ def test_launch_with_defaults(plan):
                             "cl_type": "op-node",
                             "cl_image": "op-node:latest",
                         }
-                    ]
+                    ],
                 }
             ]
         },
@@ -73,6 +73,7 @@ def test_launch_with_defaults(plan):
         observability_helper=observability_helper,
         interop_params=parsed_input_args.interop,
         da_server_context=da_server_context,
+        sequencer_params=chain.sequencer_params,
     )
 
     el_service_name = "op-el-1-op-reth-op-node-"
@@ -168,7 +169,7 @@ def test_launch_with_el_op_besu(plan):
                             "el_type": "op-besu",
                             "el_image": "op-besu:latest",
                         }
-                    ]
+                    ],
                 }
             ]
         },
@@ -202,6 +203,7 @@ def test_launch_with_el_op_besu(plan):
         observability_helper=observability_helper,
         interop_params=parsed_input_args.interop,
         da_server_context=da_server_context,
+        sequencer_params=chain.sequencer_params,
     )
 
     el_service_name = "op-el-1-op-besu-op-node-"

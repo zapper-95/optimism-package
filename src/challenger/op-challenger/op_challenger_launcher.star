@@ -109,11 +109,18 @@ def get_challenger_config(
         "--l1-beacon=" + l1_config_env_vars["CL_RPC_URL"],
         "--l1-eth-rpc=" + l1_config_env_vars["L1_RPC_URL"],
         "--l2-eth-rpc=" + el_context.rpc_http_url,
-        "--private-key=" + challenger_key,
         "--rollup-rpc=" + cl_context.beacon_http_url,
         "--trace-type=" + ",".join(challenger_params.cannon_trace_types),
     ]
 
+    if not challenger_params.signer_address:
+        cmd.append("--private-key=" + challenger_key)
+    else:
+        cmd.append("--signer.endpoint=" + str(challenger_params.signer_endpoint))
+        cmd.append("--signer.address=" + str(challenger_params.signer_address))
+        cmd.append("--signer.tls.enabled=false")
+
+    plan.print(cmd)
     # configure files
 
     files = {

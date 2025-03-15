@@ -93,13 +93,19 @@ def get_proposer_config(
         "--rpc.port=" + str(PROPOSER_HTTP_PORT_NUM),
         "--rollup-rpc=" + cl_context.beacon_http_url,
         "--game-factory-address=" + str(game_factory_address),
-        "--private-key=" + gs_proposer_private_key,
         "--l1-eth-rpc=" + l1_config_env_vars["L1_RPC_URL"],
         "--allow-non-finalized=true",
         "--game-type={0}".format(proposer_params.game_type),
         "--proposal-interval=" + proposer_params.proposal_interval,
         "--wait-node-sync=true",
     ]
+
+    if not proposer_params.signer_address:
+        cmd.append("--private-key=" + gs_proposer_private_key)
+    else:
+        cmd.append("--signer.endpoint=" + str(proposer_params.signer_endpoint))
+        cmd.append("--signer.address=" + str(proposer_params.signer_address))
+        cmd.append("--signer.tls.enabled=false")
 
     # apply customizations
 

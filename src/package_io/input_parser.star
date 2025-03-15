@@ -43,7 +43,6 @@ DEFAULT_SIDECAR_IMAGES = {
 }
 
 DEFAULT_DA_SERVER_PARAMS = {
-    "enabled": False,
     "server_endpoint": "",
 }
 
@@ -271,7 +270,6 @@ def input_parser(plan, input_args, deployment_type="devnet"):
                     builder_port=result["mev_params"]["builder_port"],
                 ),
                 da_server_params=struct(
-                    enabled=result["da_server_params"]["enabled"],
                     server_endpoint=result["da_server_params"]["server_endpoint"],
                 ),
                 additional_services=result["additional_services"],
@@ -350,20 +348,20 @@ def parse_network_params(plan, input_args, deployment_type):
 
     seen_names = {}
     seen_network_ids = {}
-    for chain in input_args.get("chains", default_chains(deployment_type)):
+    for chain in input_args.get("chains", default_chains()):
         network_params = default_network_params()
         network_params.update(chain.get("network_params", {}))
 
-        batcher_params = default_batcher_params(deployment_type)
+        batcher_params = default_batcher_params()
         batcher_params.update(chain.get("batcher_params", {}))
 
-        proposer_params = default_proposer_params(deployment_type)
+        proposer_params = default_proposer_params()
         proposer_params.update(chain.get("proposer_params", {}))
 
-        challenger_params = default_challenger_params(deployment_type)
+        challenger_params = default_challenger_params()
         challenger_params.update(chain.get("challenger_params", {}))
 
-        sequencer_params = default_sequencer_params(deployment_type)
+        sequencer_params = default_sequencer_params()
         sequencer_params.update(chain.get("sequencer_params", {}))
 
         l1_proxy_admin_params = default_l1_proxy_admin_params()
@@ -509,9 +507,9 @@ def check_signer_params(role_params, role):
             fail(role + " must have a signer endpoint if it has a signer address")
 
 
-def default_optimism_args(deployment_type):
+def default_optimism_args():
     return {
-        "chains": default_chains(deployment_type),
+        "chains": default_chains(),
         "op_contract_deployer_params": default_op_contract_deployer_params(),
         "global_log_level": "info",
         "global_node_selectors": {},
@@ -587,15 +585,15 @@ def default_mev_params():
     }
 
 
-def default_chains(deployment_type):
+def default_chains():
     return [
         {
             "participants": [default_participant()],
             "network_params": default_network_params(),
-            "batcher_params": default_batcher_params(deployment_type),
-            "proposer_params": default_proposer_params(deployment_type),
-            "challenger_params": default_challenger_params(deployment_type),
-            "sequencer_params": default_sequencer_params(deployment_type),
+            "batcher_params": default_batcher_params(),
+            "proposer_params": default_proposer_params(),
+            "challenger_params": default_challenger_params(),
+            "sequencer_params": default_sequencer_params(),
             "l1_proxy_admin_params": default_l1_proxy_admin_params(),
             "l2_proxy_admin_params": default_l2_proxy_admin_params(),
             "system_config_owner_params": default_system_config_owner_params(),
@@ -637,7 +635,7 @@ def default_system_config_owner_params():
     return {"address": "0x255fcBEC3d6984215a97389d83f03B608A8FA452"}
 
 
-def default_batcher_params(deployment_type):
+def default_batcher_params():
     params = {
         "image": DEFAULT_BATCHER_IMAGES["op-batcher"],
         "extra_params": [],
@@ -645,14 +643,10 @@ def default_batcher_params(deployment_type):
         "signer_endpoint": "",
         "signer_address": "",
     }
-    if deployment_type == "testnet":
-        params[
-            "private_key"
-        ] = "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aef9"
     return params
 
 
-def default_challenger_params(deployment_type):
+def default_challenger_params():
     params = {
         "enabled": True,
         "image": DEFAULT_CHALLENGER_IMAGES["op-challenger"],
@@ -664,14 +658,10 @@ def default_challenger_params(deployment_type):
         "cannon_prestates_url": "https://storage.googleapis.com/oplabs-network-data/proofs/op-program/cannon",
         "cannon_trace_types": ["cannon", "permissioned"],
     }
-    if deployment_type == "testnet":
-        params[
-            "private_key"
-        ] = "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefb"
     return params
 
 
-def default_proposer_params(deployment_type):
+def default_proposer_params():
     params = {
         "image": DEFAULT_PROPOSER_IMAGES["op-proposer"],
         "extra_params": [],
@@ -681,14 +671,10 @@ def default_proposer_params(deployment_type):
         "game_type": 1,
         "proposal_interval": "10m",
     }
-    if deployment_type == "testnet":
-        params[
-            "private_key"
-        ] = "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefc"
     return params
 
 
-def default_sequencer_params(deployment_type):
+def default_sequencer_params():
     params = {
         "image": DEFAULT_SEQUENCER_IMAGES["op-sequencer"],
         "extra_params": [],
@@ -696,10 +682,6 @@ def default_sequencer_params(deployment_type):
         "signer_endpoint": "",
         "signer_address": "",
     }
-    if deployment_type == "testnet":
-        params[
-            "private_key"
-        ] = "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefd"
     return params
 
 
@@ -808,7 +790,6 @@ def default_ethereum_package_network_params():
 
 def default_da_server_params():
     return {
-        "enabled": False,
         "server_endpoint": "",
     }
 

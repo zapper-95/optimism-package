@@ -1,3 +1,14 @@
+optimism_package:
+  chains:
+    - batcher_params:
+        private_key: "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefa"
+      challenger_params:
+        private_key: "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefb"
+        enabled: true
+      sequencer_params:
+        private_key: "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefc"     
+      proposer_params:
+        private_key: "e7848b12992369c383cfbff59633aeb305dbbd7a2c2ca19e60cc514dd953aefd"
 external_l1_network_params:
   network_id: "3151908"
   rpc_kind: standard

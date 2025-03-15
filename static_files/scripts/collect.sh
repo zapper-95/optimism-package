@@ -39,9 +39,7 @@ for chain_id in "${chain_ids[@]}"; do
       private_key="$role_private_key"
       address=$(cast wallet address "$private_key")
     else
-      # Use the signer address from SIGNER_INFORMATION and spoof the private key for now
-      # TODO: allow signer information to be used. For now we will 
-        echo "not implemented"
+        address="$role_signer_address"
     fi
 
     write_keyfile "${address}" "${private_key}" "${role}-$chain_id"
