@@ -538,7 +538,7 @@ def default_prometheus_params():
 
 def default_grafana_params():
     return {
-        "image": "grafana/grafana:latest",
+        "image": "grafana/grafana:11.5.2",
         "dashboard_sources": [
             "github.com/ethereum-optimism/grafana-dashboards-public/resources@ee47a8ec0545a06ef487ed5ec03ca692e258e5ec"
         ],
