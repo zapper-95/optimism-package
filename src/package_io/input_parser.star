@@ -526,7 +526,7 @@ def default_observability_params():
 
 def default_prometheus_params():
     return {
-        "image": "prom/prometheus:latest",
+        "image": "prom/prometheus:v3.2.1",
         "storage_tsdb_retention_time": "1d",
         "storage_tsdb_retention_size": "512MB",
         "min_cpu": 10,
