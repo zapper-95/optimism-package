@@ -20,7 +20,7 @@ write_keyfile() {
 }
 
 send() {
-  cast send $1 --value "$FUND_VALUE" --private-key "$FUND_PRIVATE_KEY" --timeout 60 --nonce "$nonce" --priority-gas-price 1gwei &
+  cast send $1 --value "$FUND_VALUE" --private-key "$FUND_PRIVATE_KEY" --timeout 60 --nonce "$nonce" --priority-gas-price 1gwei --max-fee-per-gas 2gwei &
   nonce=$((nonce+1))
 }
 
