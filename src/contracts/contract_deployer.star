@@ -183,7 +183,9 @@ def deploy_contracts(
                 "eip1559Elasticity": int(chain.gas_params.eip_1559_elasticity),
                 "deployOverrides": {
                     "l2BlockTime": chain.network_params.seconds_per_slot,
-                    "fundDevAccounts": True if devnet else False,
+                    "fundDevAccounts": True
+                    if chain.network_params.fund_dev_accounts
+                    else False,
                     "l2GenesisBlockGasLimit": "0x17D7840",
                     "gasPriceOracleBaseFeeScalar": chain.gas_params.base_fee_scalar,
                     "gasPriceOracleBlobBaseFeeScalar": chain.gas_params.blob_base_fee_scalar,
