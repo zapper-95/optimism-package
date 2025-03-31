@@ -50,7 +50,6 @@ def launch_l2(
         da_server_context = da_server_launcher.launch_da_server(
             plan,
             "da-server-{0}".format(l2_services_suffix),
-            l2_args.da_server_params.image
             )
         plan.print("Successfully launched test da-server")
 

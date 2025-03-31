@@ -54,12 +54,10 @@ def new_da_server_context(http_url):
 def launch_da_server(
     plan,
     service_name,
-    image,
 ):
     config = get_da_server_config(
         plan,
         service_name,
-        image,
     )
 
     da_server_service = plan.add_service(service_name, config)
@@ -76,7 +74,6 @@ def launch_da_server(
 def get_da_server_config(
     plan,
     service_name,
-    image,
 ):
     ports = get_used_ports()
 
