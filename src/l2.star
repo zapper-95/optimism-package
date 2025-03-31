@@ -44,6 +44,14 @@ def launch_l2(
             l2_args.da_server_params.server_endpoint,
         )
         plan.print("Successfully added da-server endpoint")
+    
+    elif "da_server_test" in l2_args.additional_services:
+        plan.print("Launching test da-server")
+        da_server_context = da_server_launcher.launch_da_server(
+            plan,
+            "da-server-{0}".format(l2_services_suffix),
+            )
+        plan.print("Successfully launched test da-server")
 
     l2 = participant_network.launch_participant_network(
         plan,

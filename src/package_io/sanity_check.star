@@ -186,6 +186,7 @@ ADDITIONAL_SERVICES_PARAMS = [
     "blockscout",
     "rollup-boost",
     "da_server",
+    "da_server_test",
 ]
 
 ROOT_PARAMS = [
