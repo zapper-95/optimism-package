@@ -1,6 +1,6 @@
 optimism_package:
   chains:
     - additional_services: ["da_server_test"]
-      
   altda_deploy_config:
+    use_altda: true 
     da_type : "custom"  
