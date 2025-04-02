@@ -6,7 +6,9 @@ shared_utils = import_module(
     "github.com/ethpandaops/ethereum-package/src/shared_utils/shared_utils.star"
 )
 
-DA_SERVER_TEST_IMAGE = "us-docker.pkg.dev/oplabs-tools-artifacts/images/da-server:latest"
+DA_SERVER_TEST_IMAGE = (
+    "us-docker.pkg.dev/oplabs-tools-artifacts/images/da-server:latest"
+)
 
 # Port IDs
 DA_SERVER_HTTP_PORT_ID = "http"
@@ -80,7 +82,7 @@ def get_da_server_config(
     return ServiceConfig(
         image=DA_SERVER_TEST_IMAGE,
         ports=ports,
-        cmd = [
+        cmd=[
             "da-server",
             "--file.path=/home",
             "--addr=0.0.0.0",

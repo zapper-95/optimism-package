@@ -267,9 +267,7 @@ def launch(
             interop_params,
         )
 
-        # We need to make sure that el_context and cl_context are first in the list, as down the line all_el_contexts[0]
-        # and all_cl_contexts[0] are used
-        all_el_contexts.insert(0, el_context)
+        all_el_contexts.append(el_context)
 
         for metrics_info in [x for x in el_context.el_metrics_info if x != None]:
             observability.register_node_metrics_job(
@@ -358,9 +356,7 @@ def launch(
             sequencer_params,
         )
 
-        # We need to make sure that el_context and cl_context are first in the list, as down the line all_el_contexts[0]
-        # and all_cl_contexts[0] are used
-        all_cl_contexts.insert(0, cl_context)
+        all_cl_contexts.append(cl_context)
 
         for metrics_info in [x for x in cl_context.cl_nodes_metrics_info if x != None]:
             observability.register_node_metrics_job(
