@@ -7,7 +7,7 @@ shared_utils = import_module(
 )
 
 DA_SERVER_TEST_IMAGE = (
-    "us-docker.pkg.dev/oplabs-tools-artifacts/images/da-server:latest"
+    "us-docker.pkg.dev/oplabs-tools-artifacts/images/da-server:v0.1.0"
 )
 
 # Port IDs

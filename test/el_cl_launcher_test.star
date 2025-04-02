@@ -35,9 +35,9 @@ def test_launch_with_defaults(plan):
                     "participants": [
                         {
                             "el_type": "op-reth",
-                            "el_image": "op-reth:latest",
+                            "el_image": "op-reth:v1.3.4",
                             "cl_type": "op-node",
-                            "cl_image": "op-node:latest",
+                            "cl_image": "op-node:v1.12.2",
                         }
                     ],
                 }
@@ -82,7 +82,7 @@ def test_launch_with_defaults(plan):
 
     cl_service_config = kurtosistest.get_service_config("op-cl-1-op-node-op-reth-")
     expect.ne(cl_service_config, None)
-    expect.eq(cl_service_config.image, "op-node:latest")
+    expect.eq(cl_service_config.image, "op-node:v1.12.2")
     expect.eq(cl_service_config.env_vars, {})
     expect.eq(
         cl_service_config.cmd,
@@ -124,7 +124,7 @@ def test_launch_with_defaults(plan):
     )
 
     expect.ne(el_service_config, None)
-    expect.eq(el_service_config.image, "op-reth:latest")
+    expect.eq(el_service_config.image, "op-reth:v1.3.4")
     expect.eq(el_service_config.env_vars, {})
     expect.eq(
         el_service_config.cmd,
@@ -167,7 +167,7 @@ def test_launch_with_el_op_besu(plan):
                     "participants": [
                         {
                             "el_type": "op-besu",
-                            "el_image": "op-besu:latest",
+                            "el_image": "op-besu:v0.2.2",
                         }
                     ],
                 }
@@ -210,7 +210,7 @@ def test_launch_with_el_op_besu(plan):
     el_service = plan.get_service(el_service_name)
     el_service_config = kurtosistest.get_service_config(el_service_name)
     expect.ne(el_service_config, None)
-    expect.eq(el_service_config.image, "op-besu:latest")
+    expect.eq(el_service_config.image, "op-besu:v0.2.2")
     expect.eq(el_service_config.env_vars, {})
     expect.eq(
         el_service_config.cmd,

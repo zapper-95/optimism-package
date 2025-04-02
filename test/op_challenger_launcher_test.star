@@ -18,9 +18,9 @@ def test_launch_with_defaults(plan):
                     "participants": [
                         {
                             "el_type": "op-reth",
-                            "el_image": "op-reth:latest",
+                            "el_image": "op-reth:v1.3.4",
                             "cl_type": "op-node",
-                            "cl_image": "op-node:latest",
+                            "cl_image": "op-node:v1.12.2",
                         }
                     ],
                     "challenger_params": {

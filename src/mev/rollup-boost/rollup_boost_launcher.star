@@ -15,7 +15,7 @@ RPC_PORT_NUM = 8541
 WS_PORT_NUM = 8546
 DISCOVERY_PORT_NUM = 30303
 RPC_PORT_ID = "rpc"
-DEFAULT_IMAGE = "flashbots/rollup-boost:latest"
+DEFAULT_IMAGE = "flashbots/rollup-boost:sha-628bb2d"
 
 
 def get_used_ports(discovery_port=DISCOVERY_PORT_NUM):
