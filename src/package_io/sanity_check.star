@@ -119,7 +119,6 @@ SUBCATEGORY_PARAMS = {
         "dispute_game_finality_delay",
     ],
     "batcher_params": [
-        "address",
         "image",
         "private_key",
         "signer_endpoint",
@@ -127,7 +126,6 @@ SUBCATEGORY_PARAMS = {
         "extra_params",
     ],
     "proposer_params": [
-        "address",
         "image",
         "private_key",
         "signer_endpoint",
@@ -137,7 +135,6 @@ SUBCATEGORY_PARAMS = {
         "proposal_interval",
     ],
     "challenger_params": [
-        "address",
         "enabled",
         "image",
         "private_key",
@@ -149,16 +146,11 @@ SUBCATEGORY_PARAMS = {
         "cannon_trace_types",
     ],
     "sequencer_params": [
-        "address",
-        "image",
         "private_key",
         "signer_endpoint",
         "signer_address",
         "extra_params",
     ],
-    "l1_proxy_admin_params": ["address"],
-    "l2_proxy_admin_params": ["address"],
-    "system_config_owner_params": ["address"],
     "gas_params": [
         "gas_limit",
         "eip_1559_elasticity",
