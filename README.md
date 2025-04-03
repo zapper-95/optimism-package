@@ -184,10 +184,10 @@ optimism_package:
 
         # The Docker image that should be used for the EL client; leave blank to use the default for the client type
         # Defaults by client:
-        # - op-geth: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:8bf10a315ccf3b4d4690db88e864697c4e2dd5bc22016995116c7b18fc52f21e
+        # - op-geth: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101503.1
         # - op-reth: parithoshj/op-reth:v1.3.4
         # - op-erigon: testinprod/op-erigon:v2.61.3-0.8.4
-        # - op-nethermind: nethermindeth/nethermind:v1.31.6
+        # - op-nethermind: nethermindeth/nethermind:1.31.6
         # - op-besu: ghcr.io/optimism-java/op-besu:v0.2.2
         el_image: ""
 
@@ -297,7 +297,7 @@ optimism_package:
 
         # The Docker image that should be used for the builder EL client; leave blank to use the default for the client type
         # Defaults by client:
-        # - op-geth: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:8bf10a315ccf3b4d4690db88e864697c4e2dd5bc22016995116c7b18fc52f21e
+        # - op-geth: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101503.1
         # - op-reth: parithoshj/op-reth:v1.3.4
         el_builder_image: ""
 

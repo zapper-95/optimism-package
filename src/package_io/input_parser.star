@@ -5,10 +5,10 @@ ethereum_package_input_parser = import_module(
 sanity_check = import_module("./sanity_check.star")
 
 DEFAULT_EL_IMAGES = {
-    "op-geth": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:8bf10a315ccf3b4d4690db88e864697c4e2dd5bc22016995116c7b18fc52f21e",
+    "op-geth": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101503.1",
     "op-reth": "ghcr.io/paradigmxyz/op-reth:v1.3.4",
     "op-erigon": "testinprod/op-erigon:v2.61.3-0.8.4",
-    "op-nethermind": "nethermind/nethermind:v1.31.6",
+    "op-nethermind": "nethermind/nethermind:1.31.6",
     "op-besu": "ghcr.io/optimism-java/op-besu:v0.2.2",
 }
 
