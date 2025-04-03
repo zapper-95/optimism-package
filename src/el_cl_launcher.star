@@ -387,6 +387,7 @@ def launch(
                 observability_helper,
                 interop_params,
                 da_server_context,
+                sequencer_params,
             )
             for metrics_info in [
                 x for x in cl_builder_context.cl_nodes_metrics_info if x != None
