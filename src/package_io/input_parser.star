@@ -5,32 +5,32 @@ ethereum_package_input_parser = import_module(
 sanity_check = import_module("./sanity_check.star")
 
 DEFAULT_EL_IMAGES = {
-    "op-geth": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:latest",
-    "op-reth": "ghcr.io/paradigmxyz/op-reth:latest",
-    "op-erigon": "testinprod/op-erigon:latest",
-    "op-nethermind": "nethermind/nethermind:latest",
-    "op-besu": "ghcr.io/optimism-java/op-besu:latest",
+    "op-geth": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101503.1",
+    "op-reth": "ghcr.io/paradigmxyz/op-reth:v1.3.4",
+    "op-erigon": "testinprod/op-erigon:v2.61.3-0.8.4",
+    "op-nethermind": "nethermind/nethermind:1.31.6",
+    "op-besu": "ghcr.io/optimism-java/op-besu:v0.2.2",
 }
 
 DEFAULT_CL_IMAGES = {
-    "op-node": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:develop",
-    "hildr": "ghcr.io/optimism-java/hildr:latest",
+    "op-node": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:df1d18acb5f151b5d32b5e78df9c1331ed770505",
+    "hildr": "ghcr.io/optimism-java/hildr:v0.4.5",
 }
 
 DEFAULT_BATCHER_IMAGES = {
-    "op-batcher": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-batcher:develop",
+    "op-batcher": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-batcher:df1d18acb5f151b5d32b5e78df9c1331ed770505",
 }
 
 DEFAULT_CHALLENGER_IMAGES = {
-    "op-challenger": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-challenger:develop",
+    "op-challenger": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-challenger:df1d18acb5f151b5d32b5e78df9c1331ed770505",
 }
 
 DEFAULT_SUPERVISOR_IMAGES = {
-    "op-supervisor": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-supervisor:develop",
+    "op-supervisor": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-supervisor:df1d18acb5f151b5d32b5e78df9c1331ed770505",
 }
 
 DEFAULT_PROPOSER_IMAGES = {
-    "op-proposer": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-proposer:develop",
+    "op-proposer": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-proposer:df1d18acb5f151b5d32b5e78df9c1331ed770505",
 }
 
 
@@ -39,7 +39,7 @@ DEFAULT_SEQUENCER_IMAGES = {
 }
 
 DEFAULT_SIDECAR_IMAGES = {
-    "rollup-boost": "flashbots/rollup-boost:latest",
+    "rollup-boost": "flashbots/rollup-boost:sha-628bb2d",
 }
 
 DEFAULT_DA_SERVER_PARAMS = {
@@ -762,7 +762,7 @@ def default_ethereum_package_participants():
             {
                 "el_type": "geth",
                 "cl_type": "teku",
-                "cl_image": "consensys/teku:latest-amd64",
+                "cl_image": "consensys/teku:25.4.0-amd64",
             }
         ]
     }

@@ -109,7 +109,7 @@ optimism_package:
       max_mem: 2048
       # Prometheus docker image to use
       # Defaults to the latest image
-      image: "prom/prometheus:latest"
+      image: "prom/prometheus:v3.2.1"
     # Default grafana configuration
     grafana_params:
       # A list of locators for grafana dashboards to be loaded by the grafana service.
@@ -127,7 +127,7 @@ optimism_package:
       max_mem: 2048
       # Grafana docker image to use
       # Defaults to the latest image
-      image: "grafana/grafana:latest"
+      image: "grafana/grafana:11.5.2"
   # Interop configuration
   interop:
     # Whether or not to enable interop mode
@@ -184,11 +184,11 @@ optimism_package:
 
         # The Docker image that should be used for the EL client; leave blank to use the default for the client type
         # Defaults by client:
-        # - op-geth: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:latest
-        # - op-reth: parithoshj/op-reth:latest
-        # - op-erigon: testinprod/op-erigon:latest
-        # - op-nethermind: nethermindeth/nethermind:op-c482d56
-        # - op-besu: ghcr.io/optimism-java/op-besu:latest
+        # - op-geth: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101503.1
+        # - op-reth: parithoshj/op-reth:v1.3.4
+        # - op-erigon: testinprod/op-erigon:v2.61.3-0.8.4
+        # - op-nethermind: nethermindeth/nethermind:1.31.6
+        # - op-besu: ghcr.io/optimism-java/op-besu:v0.2.2
         el_image: ""
 
         # The log level string that this participant's EL client should log at
@@ -242,8 +242,8 @@ optimism_package:
 
         # The Docker image that should be used for the CL client; leave blank to use the default for the client type
         # Defaults by client:
-        # - op-node: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:develop
-        # - hildr: ghcr.io/optimism-java/hildr:latest
+        # - op-node: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:df1d18acb5f151b5d32b5e78df9c1331ed770505
+        # - hildr: ghcr.io/optimism-java/hildr:v0.4.5
         cl_image: ""
 
         # The log level string that this participant's CL client should log at
@@ -297,8 +297,8 @@ optimism_package:
 
         # The Docker image that should be used for the builder EL client; leave blank to use the default for the client type
         # Defaults by client:
-        # - op-geth: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:latest
-        # - op-reth: parithoshj/op-reth:latest
+        # - op-geth: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101503.1
+        # - op-reth: parithoshj/op-reth:v1.3.4
         el_builder_image: ""
 
         # The type of builder CL client that should be started
@@ -309,8 +309,8 @@ optimism_package:
 
         # The Docker image that should be used for the builder CL client; leave blank to use the default for the client type
         # Defaults by client:
-        # - op-node: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:develop
-        # - hildr: ghcr.io/optimism-java/hildr:latest
+        # - op-node: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-node:df1d18acb5f151b5d32b5e78df9c1331ed770505
+        # - hildr: ghcr.io/optimism-java/hildr:v0.4.5
         cl_builder_image: ""
 
         # Participant specific flags
@@ -458,7 +458,7 @@ optimism_package:
       # Default MEV configuration
       mev_params:
         # The Docker image that should be used for rollup boost; leave blank to use the default rollup-boost image
-        # Defaults to "flashbots/rollup-boost:latest"
+        # Defaults to "flashbots/rollup-boost:sha-628bb2d"
         rollup_boost_image: ""
 
         # The host of an external builder
@@ -653,7 +653,7 @@ optimism_package:
         - el_builder_type: op-geth
           cl_builder_type: op-node
       mev_params:
-        rollup_boost_image: "flashbots/rollup-boost:latest"
+        rollup_boost_image: "flashbots/rollup-boost:sha-628bb2d"
         builder_host: "localhost"
         builder_port: "8545"
       additional_services:

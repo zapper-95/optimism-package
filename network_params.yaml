@@ -72,7 +72,7 @@ ethereum_package:
   participants:
   - el_type: geth
     cl_type: teku
-    cl_image: "consensys/teku:latest-amd64" # add this https://github.com/rancher-sandbox/rancher-desktop/issues/8057
+    cl_image: "consensys/teku:25.4.0-amd64" # add this https://github.com/rancher-sandbox/rancher-desktop/issues/8057
   network_params:
     preset: minimal
     genesis_delay: 5
