@@ -33,11 +33,6 @@ DEFAULT_PROPOSER_IMAGES = {
     "op-proposer": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-proposer:df1d18acb5f151b5d32b5e78df9c1331ed770505",
 }
 
-
-DEFAULT_SEQUENCER_IMAGES = {
-    "op-sequencer": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-proposer:develop",
-}
-
 DEFAULT_SIDECAR_IMAGES = {
     "rollup-boost": "flashbots/rollup-boost:sha-628bb2d",
 }
@@ -242,20 +237,10 @@ def input_parser(plan, input_args, deployment_type="devnet"):
                     proposal_interval=result["proposer_params"]["proposal_interval"],
                 ),
                 sequencer_params=struct(
-                    image=result["sequencer_params"]["image"],
                     private_key=result["sequencer_params"]["private_key"],
                     signer_endpoint=result["sequencer_params"]["signer_endpoint"],
                     signer_address=result["sequencer_params"]["signer_address"],
                     extra_params=result["sequencer_params"]["extra_params"],
-                ),
-                l1_proxy_admin_params=struct(
-                    address=result["l1_proxy_admin_params"]["address"]
-                ),
-                l2_proxy_admin_params=struct(
-                    address=result["l2_proxy_admin_params"]["address"]
-                ),
-                system_config_owner_params=struct(
-                    address=result["system_config_owner_params"]["address"]
                 ),
                 gas_params=struct(
                     gas_limit=result["gas_params"]["gas_limit"],
@@ -364,15 +349,6 @@ def parse_network_params(plan, input_args, deployment_type):
         sequencer_params = default_sequencer_params()
         sequencer_params.update(chain.get("sequencer_params", {}))
 
-        l1_proxy_admin_params = default_l1_proxy_admin_params()
-        l1_proxy_admin_params.update(chain.get("l1_proxy_admin_params", {}))
-
-        l2_proxy_admin_params = default_l2_proxy_admin_params()
-        l2_proxy_admin_params.update(chain.get("l2_proxy_admin_params", {}))
-
-        system_config_owner_params = default_system_config_owner_params()
-        system_config_owner_params.update(chain.get("system_config_owner_params", {}))
-
         gas_params = default_gas_params()
         gas_params.update(chain.get("gas_params", {}))
 
@@ -462,9 +438,6 @@ def parse_network_params(plan, input_args, deployment_type):
             "challenger_params": challenger_params,
             "proposer_params": proposer_params,
             "sequencer_params": sequencer_params,
-            "l1_proxy_admin_params": l1_proxy_admin_params,
-            "l2_proxy_admin_params": l2_proxy_admin_params,
-            "system_config_owner_params": system_config_owner_params,
             "gas_params": gas_params,
             "mev_params": mev_params,
             "da_server_params": da_server_params,
@@ -594,9 +567,6 @@ def default_chains():
             "proposer_params": default_proposer_params(),
             "challenger_params": default_challenger_params(),
             "sequencer_params": default_sequencer_params(),
-            "l1_proxy_admin_params": default_l1_proxy_admin_params(),
-            "l2_proxy_admin_params": default_l2_proxy_admin_params(),
-            "system_config_owner_params": default_system_config_owner_params(),
             "gas_params": default_gas_params(),
             "mev_params": default_mev_params(),
             "da_server_params": default_da_server_params(),
@@ -621,18 +591,6 @@ def default_network_params():
         "fee_withdrawal_network": 0,
         "dispute_game_finality_delay": 302400,
     }
-
-
-def default_l1_proxy_admin_params():
-    return {"address": "0x255fcBEC3d6984215a97389d83f03B608A8FA452"}
-
-
-def default_l2_proxy_admin_params():
-    return {"address": "0x255fcBEC3d6984215a97389d83f03B608A8FA452"}
-
-
-def default_system_config_owner_params():
-    return {"address": "0x255fcBEC3d6984215a97389d83f03B608A8FA452"}
 
 
 def default_batcher_params():
@@ -676,7 +634,6 @@ def default_proposer_params():
 
 def default_sequencer_params():
     params = {
-        "image": DEFAULT_SEQUENCER_IMAGES["op-sequencer"],
         "extra_params": [],
         "private_key": "",
         "signer_endpoint": "",
