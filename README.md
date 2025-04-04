@@ -3,12 +3,12 @@ This is a fork of the optimism package built to allow more chain configurations.
 
 ## New Configurations
 ### Signer Information
-In the upstream package, privates keys are determined by the mnemonic `test test test test test test test test test test test junk` and cannot be customised.
+In the upstream package, private keys are determined by the mnemonic `test test test test test test test test test test test junk` and cannot be customised.
 
-We introduce customisation for private keys and signer information (address and endpoint) for each privallaged role.
+We introduce customisation for private keys and signer information (address and endpoint) for each privileged role.
 
 
-| Role       | Parameter       | Path                                    |
+| Role       | Field       | YAML Path                                    |
 |------------|---------------|-----------------------------------------|
 | **Batcher**    | private_key    | `chain.batcher_params.private_key`    |
 |            | signer_endpoint | `chain.batcher_params.signer_endpoint` |
@@ -24,14 +24,14 @@ We introduce customisation for private keys and signer information (address and 
 |            | signer_address  | `chain.challenger_params.signer_address` |
 
 ### Network Parameters
-| Parameter                         | Path                                              |
+| Field                         | YAML Path                                              |
 |---------------------------------|---------------------------------------------------|
 | Withdrawal delay              | `chain.network_params.withdrawal_delay`          |
 | Fee withdrawal network          | `chain.network_params.fee_withdrawal_network`    |
 | Dispute game finality delay     | `chain.network_params.dispute_game_finality_delay` |
 
 ### Gas Parameters
-| Parameter                   | Path                                       |
+| Field                   | YAML Path                                       |
 |-----------------------------|--------------------------------------------|
 | Block gas limit             | `chain.gas_params.gas_limit`               |
 | EIP 1559 Elasticity         | `chain.gas_params.eip_1559_elasticity`       |
@@ -40,8 +40,8 @@ We introduce customisation for private keys and signer information (address and 
 | Blob Base Fee Scalar       | `chain.gas_params.blob_base_fee_scalar`    |
 
 
-### Data Availibility
-| Parameter                         | Path                                                           |
+### Data Availability
+| Field                         | YAML Path                                                           |
 |-----------------------------------|----------------------------------------------------------------|
 | Data availability type           | `optimism_package.altda_deploy_config.da_type`                 |
 | Batch submissions frequency      | `optimism_package.altda_deploy_config.da_batch_submission_frequency` |
@@ -155,17 +155,29 @@ optimism_package:
   #    - For altda chains, set da_server_params to use an image and cmd of your choice (one could use da-server, another eigenda-proxy, another celestia proxy, etc). If unset, op's default da-server image will be used.
   altda_deploy_config:
     use_altda: false
-    da_type: "calldata" # allows auto, blobs, calldata or custom. Sets --data-availability-type in batcher_launcher
+  
+    # Specifies how transactions are posted. Allows auto, blobs calldata or custom. 
+    da_type: "calldata" 
 
-    da_batch_submission_frequency: 1 #--max-channel-duration=1 in block units but user input in minutes
+    # Determines how frequently the batcher submits aggregated transaction data to L1 (via the batcher transaction).
+    da_batch_submission_frequency: 1
 
-    da_challenge_contract_address: "0x49cce536156dC6E5F05B26eaA8a2607Cb943e041"
+    # Represents the L1 address of the DataAvailabilityChallenge contract.
+    da_challenge_contract_address: ""
 
-
+    # Specifies the allowed commitment. Either KeccakCommitment or GenericCommitment. However, KeccakCommitment will be deprecated soon.
     da_commitment_type: KeccakCommitment
+
+    # Represents the block interval during which the availability of a data commitment can be challenged.
     da_challenge_window: 100
+
+    # Represents the block interval during which a data availability challenge can be resolved.
     da_resolve_window: 100
+
+    # Represents the required bond size to initiate a data availability challenge.
     da_bond_size: 1000
+
+    # Represents the percentage of the resolving cost to be refunded to the resolver such as 100 means 100% refund.
     da_resolver_refund_percentage: 0
 
   # An array of L2 networks to run
@@ -385,6 +397,15 @@ optimism_package:
         # Defaults to True
         fund_dev_accounts: true
 
+        # The number of seconds that a proof must be mature before it can be used to finalize a withdrawal.
+        withdrawal_delay: 604800
+
+        # Sets the fee withdrawal network (0 for L1, 1 for L2) for baseFee, l1FeeVault, sequencerFee, 
+        fee_withdrawal_network: 0 
+
+        # An additional number of seconds a dispute game must wait before it can be used to finalize a withdrawal.
+        dispute_game_finality_delay: 302400
+
       # Default batcher configuration
       batcher_params:
         # The Docker image that should be used for the batcher; leave blank to use the default op-batcher image
@@ -449,10 +470,20 @@ optimism_package:
         signer_address: "" # wallet address of the signer
       
       gas_params:
+
+        # Represents the chain's block gas limit.
         gas_limit: "0x17D7840"
+
+        # The elasticity of the EIP1559 fee market.
         eip_1559_elasticity: 6
+
+        # The denominator of EIP1559 base fee market.
         eip_1559_denominator: 50
+
+        # Represents the value of the base fee scalar used for fee calculations.
         base_fee_scalar: 2
+
+        # Represents the value of the blob base fee scalar used for fee calculations.
         blob_base_fee_scalar: 1
   
       # Default MEV configuration
@@ -510,7 +541,7 @@ optimism_package:
   # Defaults to empty
   global_tolerations: []
 
-  # Whether the environment should be persistent; this is WIP and is slowly being rolled out accross services
+  # Whether the environment should be persistent; this is WIP and is slowly being rolled out across services
   # Defaults to false
   persistent: false
 
